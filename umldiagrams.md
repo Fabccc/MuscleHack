@@ -34,12 +34,12 @@ BorderColor #4A8CFC
 
 package "Diagramme de classe" {
 
-  class Exercice{
-
+  class Session{
+    + segments : Map<String, Segment>
   }
 
-  class WeightedExercice{
-
+  class Week{
+    + sessions : Map<Seance, boolean>
   }
 
   enum SegmentType{
@@ -53,19 +53,54 @@ package "Diagramme de classe" {
   class Segment{
     + duration : int
     + type : SegmentType
+    + exercices : Map<Integer, ExerciceData>
+  }
+
+  class ExerciceData{
+    + weightTotal : int
+    + weightX2 : boolean
+    + repetition : int
+    + eachSide : boolean
   }
 
 ' Notes
 
-  note right of Segment::duration
+  note left of Segment::duration
     Temps en secondes
+  end note
+
+  note left of ExerciceData::weightTotal
+    Poids en kilo de l'haltère
+  end note
+
+  note right of ExerciceData::weightX2
+    Dit si on affiche "2x poids" au lieu de "poids"
+    Ex: 
+    si weightTotal = 14 et weightX2
+    On aura "2x 14kg" sinon "14kg"
+  end note
+
+  note left of ExerciceData::eachSide
+    Si on fait les deux cotés en même temps
+    ou si on fait, par exemple, 3 reps / coté
+  end note
+
+  note left of Session::segments
+    La liste des blocs de la séance
+    Ex: "Bloc 1", "Bloc 2"...
+  end note
+
+  note left of Week::sessions
+    Une semaine complète raptor daily
+    Ex: "Lundi", "Mardi"...
   end note
 
 ' Lien entre classes
 
-  Segment --> SegmentType
-  Segment *-- "0..N" Exercice : contains
-
+  Segment::type --> SegmentType
+  Segment::exercices *-- ExerciceData
+  Session::segments *-- Segment
+  Week::sessions *-- Session
 }
 
 @enduml
