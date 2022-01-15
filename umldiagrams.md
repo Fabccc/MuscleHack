@@ -1,7 +1,7 @@
 # Diagramme UML de l'application
 
-
 ## Diagramme cas d'utilisation
+
 ```plantuml
 @startuml
 skinparam backgroundColor #EEEBDC
@@ -22,8 +22,8 @@ s --> UC3
 @enduml
 ```
 
-
 ## Diagramme de classe
+
 ```plantuml
 @startuml
 skinparam backgroundColor #EEEBDC
@@ -42,19 +42,28 @@ package "Diagramme de classe" {
     + sessions : Map<Seance, boolean>
   }
 
+' AMRAP = As many round as possible
+' = un temps max, un nombre de round qui varie
+' FORTIME = Un temps à atteindre
+' = un temps max (nullable)
+' EMOM = Chaque exo en une minute
+' = un temps max, un temps par round
+' REST = On fait un enchainement, puis on prends une pause
+' = un temps de pause
   enum SegmentType{
     AMRAP
     FORTIME
     EMOM
-    TABATA
     REST
   }
 
-  class Segment{
+  abstract class Segment{
     + duration : int
-    + type : SegmentType
     + exercices : Map<Integer, ExerciceData>
+    + type : SegmentType
+    + data : int[]
   }
+
 
   class ExerciceData{
     + weightTotal : int
@@ -65,17 +74,13 @@ package "Diagramme de classe" {
 
 ' Notes
 
-  note left of Segment::duration
-    Temps en secondes
-  end note
-
   note left of ExerciceData::weightTotal
     Poids en kilo de l'haltère
   end note
 
   note right of ExerciceData::weightX2
     Dit si on affiche "2x poids" au lieu de "poids"
-    Ex: 
+    Ex:
     si weightTotal = 14 et weightX2
     On aura "2x 14kg" sinon "14kg"
   end note
@@ -85,13 +90,28 @@ package "Diagramme de classe" {
     ou si on fait, par exemple, 3 reps / coté
   end note
 
+  note right of Segment::duration
+    Temps en secondes
+  end note
+
+  note left of Segment::data
+    Représente les données en fonction
+    du type de l'exercice
+    
+    <b>Donnée</b> 
+    AMRAP = [maxTime, roundCount]
+    FORTIME = [maxTime?]
+    EMOM = [time, timePerRound]
+    REST = [restTime]
+  end note
+
   note left of Session::segments
     La liste des blocs de la séance
     Ex: "Bloc 1", "Bloc 2"...
   end note
 
   note left of Week::sessions
-    Une semaine complète raptor daily
+    Une semaine complète
     Ex: "Lundi", "Mardi"...
   end note
 
