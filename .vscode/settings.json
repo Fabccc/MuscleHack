@@ -12,5 +12,6 @@
     "ios": true,
     "linux": true,
     "web": true,
+    "**.iml": true,
   }
 }
