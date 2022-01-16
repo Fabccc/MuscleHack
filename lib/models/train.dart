@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 /// Package permettant de manipuler les types de données
 /// liés a l'entrainement sportif de l'application
 
@@ -84,6 +86,13 @@ class Session {
 }
 
 class Week {
+  static Widget widget(Week week) {
+    return SizedBox(
+      height: 50,
+      child: Center(child: Text('Semaine ${week.dateTime}')),
+    );
+  }
+
   int id;
   DateTime dateTime;
   List<Session> sessions = [];
@@ -95,14 +104,6 @@ class Week {
         dateTime = DateTime.now() {
     id = data["id"];
     dateTime = data["dateTime"];
-  }
-
-  int get uid {
-    return id;
-  }
-
-  DateTime get date {
-    return dateTime;
   }
 
   Map<String, dynamic> toMap() {

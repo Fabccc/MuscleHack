@@ -34,8 +34,22 @@ class _CurrentWeekState extends State<CurrentWeek> {
 
   @override
   Widget build(BuildContext context) {
+    var _weeks = weeks;
+
     return Scaffold(
-      body: Container(),
-    );
+        body: Row(
+      children: [
+        const Text("Semaines"),
+        ListView.separated(
+          padding: const EdgeInsets.all(8),
+          itemCount: _weeks.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Week.widget(_weeks[index]);
+          },
+          separatorBuilder: (BuildContext context, int index) =>
+              const Divider(),
+        ),
+      ],
+    ));
   }
 }
