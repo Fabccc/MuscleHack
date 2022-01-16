@@ -1,3 +1,6 @@
+/// Package permettant de manipuler les types de données
+/// liés a l'entrainement sportif de l'application
+
 enum SegmentType { AMRAP, FORTIME, EMOM, TABATA, REST }
 
 class ExerciceType {}
