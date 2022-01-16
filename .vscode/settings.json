@@ -13,5 +13,10 @@
     "linux": true,
     "web": true,
     "**.iml": true,
+    ".flutter-plugins": true,
+    ".flutter-plugins-dependencies": true,
+    ".metadata": true,
+    ".packages": true,
+    "pubspec.lock": true
   }
 }
