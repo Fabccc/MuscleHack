@@ -35,11 +35,14 @@ BorderColor #4A8CFC
 package "Diagramme de classe" {
 
   class Session{
+    + id : int
+    + dateTime : Date
     + segments : Map<String, Segment>
   }
 
   class Week{
     + sessions : Map<Seance, boolean>
+    + id : int
   }
 
 ' AMRAP = As many round as possible
