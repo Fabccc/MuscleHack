@@ -19,5 +19,6 @@
     ".metadata": true,
     ".packages": true,
     "pubspec.lock": true
-  }
+  },
+  "editor.formatOnSave": true
 }
