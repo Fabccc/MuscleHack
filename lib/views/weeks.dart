@@ -44,7 +44,12 @@ class _CurrentWeekState extends State<CurrentWeek> {
           padding: const EdgeInsets.all(8),
           itemCount: _weeks.length,
           itemBuilder: (BuildContext context, int index) {
-            return Week.widget(_weeks[index]);
+            return InkWell(
+              child: Week.widget(_weeks[index]),
+              onTap: () => {
+                // Launch the week view
+              },
+            );
           },
           separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
