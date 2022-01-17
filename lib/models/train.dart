@@ -66,6 +66,15 @@ class Segment {
 }
 
 class Session {
+
+
+  static Widget widget(Session extracted) {
+    return SizedBox(
+      height: 50,
+      child: Center(child: Text("Session ${extracted.id}"),),
+    );
+  }
+
   int id;
   DateTime dateTime;
   List<Segment> sessions = [];
@@ -83,6 +92,7 @@ class Session {
   Map<String, dynamic> toMap() {
     return {"id": id, "dateTime": dateTime.millisecondsSinceEpoch};
   }
+
 }
 
 class Week {
