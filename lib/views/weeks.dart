@@ -6,8 +6,6 @@ import 'package:musclatax/models/train.dart';
 import 'package:musclatax/views/week.dart';
 
 class WeekList extends StatefulWidget {
-
-
   const WeekList({Key? key}) : super(key: key);
 
   @override
@@ -39,27 +37,33 @@ class _WeekListState extends State<WeekList> {
     var _weeks = weeks;
 
     return Scaffold(
-        body: Row(
-      children: [
-        const Text("Semaines"),
-        ListView.separated(
-          padding: const EdgeInsets.all(8),
-          itemCount: _weeks.length,
-          itemBuilder: (BuildContext context, int index) {
-            Week extracted = _weeks[index];
-            return InkWell(
-              child: Week.widget(extracted),
-              onTap: () {
-                // Launch the week view
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (ctx) => WeekDisplay(week: extracted)));
-              },
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) =>
-              const Divider(),
-        ),
-      ],
-    ));
+      body: Row(
+        children: [
+          const Text("Semaines"),
+          ListView.separated(
+            padding: const EdgeInsets.all(8),
+            itemCount: _weeks.length,
+            itemBuilder: (BuildContext context, int index) {
+              Week extracted = _weeks[index];
+              return InkWell(
+                child: Week.widget(extracted),
+                onTap: () {
+                  // Launch the week view
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => WeekDisplay(week: extracted)));
+                },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+      ),
+    );
   }
 }
