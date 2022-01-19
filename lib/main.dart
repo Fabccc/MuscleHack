@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:musclatax/components/button.dart';
+import 'package:musclatax/components/container.dart';
 import 'package:musclatax/views/weeks.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
+  initializeDateFormatting("fr_FR", null);
   runApp(const Musclatax());
 }
 
@@ -25,15 +29,9 @@ class MusclataxMainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double topbottom = 200;
-    const double leftright = 30;
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.only(
-            top: topbottom,
-            bottom: topbottom,
-            left: leftright,
-            right: leftright),
+      body: DefaultContainer(
+        topbottom: 200,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
