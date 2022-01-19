@@ -1,4 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:musclatax/components/title.dart';
+import 'package:musclatax/components/utils.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 /// Package permettant de manipuler les types de données
 /// liés a l'entrainement sportif de l'application
@@ -66,12 +70,14 @@ class Segment {
 }
 
 class Session {
-
-
   static Widget widget(Session extracted) {
     return SizedBox(
       height: 50,
-      child: Center(child: Text("Session ${extracted.id}"),),
+      child: Center(
+        child: StandarText(
+          text: extracted.toString(),
+        ),
+      ),
     );
   }
 
@@ -85,21 +91,27 @@ class Session {
       : id = 0,
         dateTime = DateTime.now() {
     id = data["id"];
-    dateTime = data["dateTime"];
+    dateTime = DateTime.fromMillisecondsSinceEpoch(data["dateTime"]);
     sessions = [];
+  }
+
+  @override
+  String toString() {
+    return "Session du " + DateFormat("EEEEE", "fr_FR").format(dateTime);
   }
 
   Map<String, dynamic> toMap() {
     return {"id": id, "dateTime": dateTime.millisecondsSinceEpoch};
   }
-
 }
 
 class Week {
+  static final DateFormat format = DateFormat("yyyy", "fr_FR");
+
   static Widget widget(Week week) {
     return SizedBox(
       height: 50,
-      child: Center(child: Text('Semaine ${week.dateTime}')),
+      child: Center(child: StandarText(text: week.toString())),
     );
   }
 
@@ -113,7 +125,12 @@ class Week {
       : id = 0,
         dateTime = DateTime.now() {
     id = data["id"];
-    dateTime = data["dateTime"];
+    dateTime = DateTime.fromMillisecondsSinceEpoch(data["dateTime"]);
+  }
+
+  @override
+  String toString() {
+    return "Semaine ${DateUtils.weekNumber(dateTime)} de ${format.format(dateTime)}";
   }
 
   Map<String, dynamic> toMap() {
