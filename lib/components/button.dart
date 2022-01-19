@@ -12,12 +12,14 @@ class MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
+            elevation: 7,
+            shadowColor: Colors.black45,
             backgroundColor: const Color(0xffffffff),
             shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(3))),
-            side: const BorderSide(width: 1.5, color: Color(0xff4a8cfc))),
+                borderRadius: BorderRadius.all(Radius.circular(4))),
+            side: const BorderSide(width: 1.5, color: Colors.white)),
         onPressed: () {
-          //onPressed!();
+          onPressed!();
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
