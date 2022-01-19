@@ -6,26 +6,23 @@ import 'package:sqflite/sqflite.dart';
 
 class DBAccess {
   static const dbName = "train.db";
-  static const dbVersion = 1;
+  static const dbVersion = 2;
 
-  static Future<Database> openDb() async {
-    return openDatabase(
-      join(await getDatabasesPath(), dbName),
-      onCreate: (db, version) {
-        var batch = db.batch();
-        batch.execute("""CREATE TABLE week(
+  static createAllTable(Database db) {
+    var batch = db.batch();
+    batch.execute("""CREATE TABLE IF NOT EXISTS week(
               id INTEGER PRIMARY KEY, 
               dateTime BIGINT NOT NULL
-              )""");
-        batch.execute("""CREATE TABLE sessions(
-                id INTEGER PRIMARY, 
+              );""");
+    batch.execute("""CREATE TABLE IF NOT EXISTS sessions(
+                id INTEGER PRIMARY KEY, 
                 week INTEGER,
-                dateTime BIGINT,
-                done SMALLINT,
+                dateTime INTEGER,
+                done INTEGER,
                 FOREIGN KEY(week) REFERENCES week(id)
-                )
+                );
                 """);
-        batch.execute("""CREATE TABLE segments(
+    batch.execute("""CREATE TABLE IF NOT EXISTS segments(
               id INTEGER PRIMARY KEY,
               session INTEGER,
               duration INTEGER NOT NULL, 
@@ -33,9 +30,16 @@ class DBAccess {
               type INTEGER NOT NULL, 
               exercices TEXT,
               FOREIGN KEY(session) REFERENCES sessions(id)
-              )""");
-        batch.commit();
-      },
+              );""");
+    batch.commit();
+  }
+
+  static Future<Database> openDb() async {
+    return openDatabase(
+      join(await getDatabasesPath(), dbName),
+      onUpgrade: (db, oldVersion, newVersion) => createAllTable(db),
+      onDowngrade: (db, oldVersion, newVersion) => createAllTable(db),
+      onCreate: (db, version) => createAllTable(db),
       version: dbVersion,
     );
   }
@@ -66,5 +70,44 @@ class DBAccess {
     db.close();
 
     return List.generate(result.length, (i) => Segment.fromSerial(result[i]));
+  }
+
+  static Future<int> insertNewWeek(Week newWeek) async {
+    final db = await openDb();
+
+    var newWeekMap = newWeek.toMap();
+    newWeekMap.removeWhere((key, value) => key == "id");
+
+    return await db.insert("week", newWeekMap,
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  static void removeWeek(Week extracted) async {
+    final db = await openDb();
+
+    await db.delete("week", where: "id = ?", whereArgs: [extracted.id]);
+  }
+
+  /*
+      id INTEGER PRIMARY KEY, 
+      week INTEGER,
+      dateTime INTEGER,
+      done INTEGER,
+  */
+  static Future<int> insertNewSession(Week week, Session newSession) async {
+    final db = await openDb();
+    var newSessionMap = newSession.toMap();
+    newSessionMap.removeWhere((key, value) => key == "id");
+    newSessionMap["done"] = 0; // false
+    newSessionMap["week"] = week.id;
+
+    return await db.insert("sessions", newSessionMap);
+  }
+
+  static void removeSession(Week week, Session session) async {
+    final db = await openDb();
+
+    await db.delete("sessions",
+        where: "id = ? AND week = ?", whereArgs: [session.id, week.id]);
   }
 }
