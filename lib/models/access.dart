@@ -110,4 +110,11 @@ class DBAccess {
     await db.delete("sessions",
         where: "id = ? AND week = ?", whereArgs: [session.id, week.id]);
   }
+
+  static void updateSession(Week week, Session session) async {
+    final db = await openDb();
+
+    await db.update("sessions", session.toMap(),
+        where: "id = ? AND week = ?", whereArgs: [session.id, week.id]);
+  }
 }
