@@ -7,7 +7,10 @@ class DateUtils {
   }
 
   static DateTime startOfWeek() {
-    DateTime d = DateTime.now();
-    return d.subtract(Duration(days: d.weekday - 1));
+    return startOfWeekDate(DateTime.now());
+  }
+
+  static DateTime startOfWeekDate(DateTime dateTime) {
+    return dateTime.subtract(Duration(days: dateTime.weekday - 1));
   }
 }
