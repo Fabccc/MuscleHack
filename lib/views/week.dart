@@ -80,19 +80,25 @@ class _WeekDisplayState extends State<WeekDisplay> {
                                   Icons.delete,
                                 ),
                                 color: Colors.red,
-                                iconSize: 28,
+                                iconSize: 32,
                               ),
-                              Checkbox(
-                                onChanged: (val) {
-                                  extracted.done = val!;
-                                  DBAccess.updateSession(
-                                      widget.week, extracted);
-                                  _initAsyncState();
-                                },
-                                checkColor: Colors.white,
-                                fillColor:
-                                    MaterialStateProperty.resolveWith(getColor),
-                                value: extracted.done,
+                              Transform.scale(
+                                scale: 1.4,
+                                child: Checkbox(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(4))),
+                                  onChanged: (val) {
+                                    extracted.done = val!;
+                                    DBAccess.updateSession(
+                                        widget.week, extracted);
+                                    _initAsyncState();
+                                  },
+                                  checkColor: Colors.white,
+                                  fillColor: MaterialStateProperty.resolveWith(
+                                      getColor),
+                                  value: extracted.done,
+                                ),
                               )
                             ],
                           )
@@ -104,7 +110,9 @@ class _WeekDisplayState extends State<WeekDisplay> {
                     );
                   },
                   separatorBuilder: (BuildContext context, int index) =>
-                      const Divider(),
+                      const Divider(
+                    thickness: 1,
+                  ),
                 ),
               ),
             ],
