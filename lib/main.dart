@@ -30,13 +30,14 @@ class MusclataxMainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffe0e0e0),
       body: DefaultContainer(
         topbottom: 200,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            MenuButton(
+            NeumophirsmButton(
                 onPressed: () => {
                       Navigator.push(
                           context,
@@ -44,7 +45,7 @@ class MusclataxMainMenu extends StatelessWidget {
                               builder: (context) => const WeekList()))
                     },
                 content: "Liste semaines"),
-            const MenuButton(content: "Statistiques")
+            NeumophirsmButton(content: "Statistiques")
           ],
         ),
       ),

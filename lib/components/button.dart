@@ -1,5 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:musclatax/components/utils.dart';
+
+class NeumophirsmButton extends StatelessWidget {
+  static const double difference = 0.15;
+
+  final Function? onPressed;
+  final String content;
+  int horizontal;
+  int vertical;
+
+  NeumophirsmButton(
+      {Key? key,
+      required this.content,
+      this.onPressed,
+      this.horizontal = 5,
+      this.vertical = 15})
+      : super(key: key);
+
+  /*
+  Neumorphic style: 
+  border-radius: 50px;
+  background: #e0e0e0;
+  box-shadow:  dx    dy    blur  color
+  box-shadow:  20px 20px 60px #bebebe,
+              -20px -20px 60px #ffffff;*/
+
+  List<BoxShadow> calcShadow(Color color, double blur, double distance,
+      {intensity = difference}) {
+    return [
+      BoxShadow(
+        color: ColorUtils.colorLuminanceTweaked(color, intensity * -1),
+        offset: Offset(distance, distance),
+        blurRadius: blur,
+      ),
+      BoxShadow(
+        color: ColorUtils.colorLuminanceTweaked(color, intensity),
+        offset: Offset(-distance, -distance),
+        blurRadius: blur,
+      )
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            backgroundColor: const Color(0xffffffff),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            side: const BorderSide(width: 0, color: Colors.transparent)),
+        onPressed: () {
+          if (onPressed != null) {
+            onPressed!();
+          }
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: vertical.toDouble(), horizontal: horizontal.toDouble()),
+          child: Text(content,
+              style: const TextStyle(
+                  color: Color(0xff4a8cfc),
+                  fontSize: 18,
+                  fontFamily: "Ubuntu",
+                  fontWeight: FontWeight.normal)),
+        ),
+      ),
+      decoration: BoxDecoration(
+          boxShadow:
+              calcShadow(const Color(0xffe0e0e0), 40, 20, intensity: 0.4)),
+    );
+  }
+}
 
 class MenuButton extends StatelessWidget {
   final Function? onPressed;
@@ -17,7 +90,7 @@ class MenuButton extends StatelessWidget {
             backgroundColor: const Color(0xffffffff),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(4))),
-            side: const BorderSide(width: 1.5, color: Colors.white)),
+            side: const BorderSide(width: 0, color: Colors.transparent)),
         onPressed: () {
           if (onPressed != null) {
             onPressed!();
