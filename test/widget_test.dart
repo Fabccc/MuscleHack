@@ -11,5 +11,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:musclatax/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {});
+  test("String immuability", () {
+    String s = "test issou";
+    String s2 = s.substring(2, 4);
+    expect(s2, "st");
+    expect(s, "test issou");
+  });
 }
