@@ -43,7 +43,6 @@ class ColorUtils {
       rgb += ('00' + tempString).substring(tempString.length);
     }
 
-    print("Input: ${color.toHex()}, lum: ${lum}, output: ${rgb}");
     return HexColor.fromHex(rgb);
   }
 }

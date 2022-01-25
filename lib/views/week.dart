@@ -155,17 +155,6 @@ class _AddSessionInWeek extends StatelessWidget {
           .any((element) => element.dateTime.day == startOfWeek.day + day);
     }
 
-    if (kDebugMode) {
-      print("___________________________");
-      print("Lundi actif ? ${isPresent(0)}");
-      print("Mardi actif ? ${isPresent(1)}");
-      print("Mercredi actif ? ${isPresent(2)}");
-      print("Jeudi actif ? ${isPresent(3)}");
-      print("Vendredi actif ? ${isPresent(4)}");
-      print("Samedi actif ? ${isPresent(5)}");
-      print("Dimanche actif ? ${isPresent(6)}");
-    }
-
     addSession(int day) {
       return isPresent(day)
           ? null
