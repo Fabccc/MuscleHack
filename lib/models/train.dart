@@ -83,6 +83,7 @@ class Session {
 
   int id;
   DateTime dateTime;
+  bool done = false;
   List<Segment> sessions = [];
 
   Session(this.id, this.dateTime);
@@ -93,6 +94,7 @@ class Session {
     id = data["id"];
     dateTime = DateTime.fromMillisecondsSinceEpoch(data["dateTime"]);
     sessions = [];
+    done = data["done"] == 1 ? true : false;
   }
 
   @override
@@ -101,7 +103,11 @@ class Session {
   }
 
   Map<String, dynamic> toMap() {
-    return {"id": id, "dateTime": dateTime.millisecondsSinceEpoch};
+    return {
+      "id": id,
+      "dateTime": dateTime.millisecondsSinceEpoch,
+      "done": done ? 1 : 0
+    };
   }
 }
 
