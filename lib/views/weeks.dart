@@ -39,6 +39,7 @@ class _WeekListState extends State<WeekList> {
     var _weeks = weeks;
 
     return Scaffold(
+      backgroundColor: const Color(0xffe0e0e0),
       body: DefaultContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

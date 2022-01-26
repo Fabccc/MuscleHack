@@ -2,12 +2,23 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:musclatax/components/title.dart';
 import 'package:musclatax/components/utils.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 /// Package permettant de manipuler les types de données
 /// liés a l'entrainement sportif de l'application
 
 enum SegmentType { AMRAP, FORTIME, EMOM, TABATA, REST }
+
+extension SegmentTypeDescription on SegmentType {
+  String get desc {
+    return [
+      "AMRAP : As Many Round As Possible, faire le plus de round possible pendant un temps définit",
+      "FOR TIME : Un contre la montre, aller le plus vite possible sur un enchainement d'exercice, souvent avant un temps imparti",
+      "EMOM : Each One In A Minute, faire l'exercice pendant X minutes, puis à la fin, on change d'exercice, et on continue ainsi pendant Y minutes",
+      "TABATA : Travail en fractionné, X secondes d'exercice, Y secondes de repos",
+      "REST : entrainement classique, on effectue les exercices en question, puis on prend X minutes de repos"
+    ][index];
+  }
+}
 
 class ExerciceType {}
 
@@ -33,6 +44,15 @@ class ExerciceData {
 }
 
 class Segment {
+  static Widget widget(Session session, Segment segment) {
+    return SizedBox(
+      height: 50,
+      child: Center(
+          child:
+              StandarText(text: "Bloc ${session.sessions.indexOf(segment)}")),
+    );
+  }
+
   int id;
   int duration = 5;
   List<int> data = [];

@@ -6,6 +6,7 @@ import 'package:musclatax/components/title.dart';
 import 'package:musclatax/components/utils.dart' as mu_utils;
 import 'package:musclatax/models/access.dart';
 import 'package:musclatax/models/train.dart';
+import 'package:musclatax/views/session.dart';
 
 class WeekDisplay extends StatefulWidget {
   final Week week;
@@ -42,6 +43,7 @@ class _WeekDisplayState extends State<WeekDisplay> {
     List<Session> _sessions = sessions;
 
     return Scaffold(
+        backgroundColor: const Color(0xffe0e0e0),
         body: DefaultContainer(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,6 +108,11 @@ class _WeekDisplayState extends State<WeekDisplay> {
                       ),
                       onTap: () => {
                         // Launch the session view
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SessionDisplay(
+                                    week: widget.week, session: extracted)))
                       },
                     );
                   },
@@ -167,6 +174,7 @@ class _AddSessionInWeek extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: const Color(0xffe0e0e0),
       body: DefaultContainer(
         topbottom: 80,
         child: Stack(children: [

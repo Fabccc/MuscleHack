@@ -27,12 +27,20 @@ class HeaderText extends StatelessWidget {
 
 class StandarText extends StatelessWidget {
   final String text;
+  double fontSize;
+  Color color;
 
-  const StandarText({Key? key, required this.text}) : super(key: key);
+  StandarText(
+      {Key? key,
+      required this.text,
+      this.fontSize = 16,
+      this.color = const Color(0xff030303)})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        style: const TextStyle(fontFamily: "Ubuntu", fontSize: 18));
+        style:
+            TextStyle(fontFamily: "Ubuntu", fontSize: fontSize, color: color));
   }
 }

@@ -38,14 +38,17 @@ class MusclataxMainMenu extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             NeumophirsmButton(
-                onPressed: () => {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const WeekList()))
-                    },
-                content: "Liste semaines"),
-            NeumophirsmButton(content: "Statistiques")
+              onPressed: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const WeekList()))
+              },
+              content: "Liste semaines",
+              colorDifference: 0.25,
+            ),
+            NeumophirsmButton(
+              content: "Statistiques",
+              colorDifference: 0.25,
+            )
           ],
         ),
       ),

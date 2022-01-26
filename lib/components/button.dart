@@ -7,15 +7,23 @@ class NeumophirsmButton extends StatelessWidget {
 
   final Function? onPressed;
   final String content;
+  final double minWidth;
   int horizontal;
   int vertical;
+  Color backgroundColor;
+  Color color;
+  double colorDifference;
 
   NeumophirsmButton(
       {Key? key,
       required this.content,
       this.onPressed,
       this.horizontal = 5,
-      this.vertical = 15})
+      this.vertical = 15,
+      this.backgroundColor = const Color(0xffe0e0e0),
+      this.color = const Color(0xff48acfc),
+      this.colorDifference = 0.15,
+      this.minWidth = 88})
       : super(key: key);
 
   /*
@@ -47,6 +55,7 @@ class NeumophirsmButton extends StatelessWidget {
     return Container(
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
+            minimumSize: Size(minWidth, 36),
             backgroundColor: const Color(0xffffffff),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -60,8 +69,8 @@ class NeumophirsmButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               vertical: vertical.toDouble(), horizontal: horizontal.toDouble()),
           child: Text(content,
-              style: const TextStyle(
-                  color: Color(0xff4a8cfc),
+              style: TextStyle(
+                  color: color,
                   fontSize: 18,
                   fontFamily: "Ubuntu",
                   fontWeight: FontWeight.normal)),
@@ -69,7 +78,7 @@ class NeumophirsmButton extends StatelessWidget {
       ),
       decoration: BoxDecoration(
           boxShadow:
-              calcShadow(const Color(0xffe0e0e0), 40, 20, intensity: 0.4)),
+              calcShadow(backgroundColor, 40, 20, intensity: colorDifference)),
     );
   }
 }
