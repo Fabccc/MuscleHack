@@ -20,6 +20,8 @@ extension SegmentTypeDescription on SegmentType {
   }
 }
 
+extension SegmentFormProvider on SegmentType {}
+
 class ExerciceType {}
 
 class ExerciceData {
