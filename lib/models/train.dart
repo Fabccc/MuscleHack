@@ -11,11 +11,11 @@ enum SegmentType { AMRAP, FORTIME, EMOM, TABATA, REST }
 extension SegmentTypeDescription on SegmentType {
   String get desc {
     return [
-      "AMRAP : As Many Round As Possible, faire le plus de round possible pendant un temps définit",
-      "FOR TIME : Un contre la montre, aller le plus vite possible sur un enchainement d'exercice, souvent avant un temps imparti",
-      "EMOM : Each One In A Minute, faire l'exercice pendant X minutes, puis à la fin, on change d'exercice, et on continue ainsi pendant Y minutes",
-      "TABATA : Travail en fractionné, X secondes d'exercice, Y secondes de repos",
-      "REST : entrainement classique, on effectue les exercices en question, puis on prend X minutes de repos"
+      "AMRAP : As Many Round As Possible, faire le plus de round possible pendant un temps défini.",
+      "FOR TIME : Un contre la montre, aller le plus vite possible sur un enchainement d'exercice, souvent avant un temps imparti.",
+      "EMOM : Each One In A Minute, faire l'exercice pendant X minutes, puis à la fin, on change d'exercice, et on continue ainsi pendant Y minutes.",
+      "TABATA : Travail en fractionné, X secondes d'exercice, Y secondes de repos.",
+      "REST : entrainement classique, on effectue les exercices en question, puis on prend X minutes de repos."
     ][index];
   }
 }
