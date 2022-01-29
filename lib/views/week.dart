@@ -156,6 +156,7 @@ class _AddSessionInWeek extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime startOfWeek = mu_utils.DateUtils.startOfWeekDate(week.dateTime);
+    const fontSize = 24;
 
     isPresent(int day) {
       return sessions
@@ -173,93 +174,49 @@ class _AddSessionInWeek extends StatelessWidget {
             };
     }
 
+    const weekDef = {
+      "Lundi": 0,
+      "Mardi": 1,
+      "Mercredi": 2,
+      "Jeudi": 3,
+      "Vendredi": 4,
+      "Samedi": 5,
+      "Dimanche": 6,
+    };
+
     return Scaffold(
       backgroundColor: const Color(0xffe0e0e0),
       body: DefaultContainer(
         topbottom: 80,
         child: Stack(children: [
           HeaderText(text: "Ajouter une session"),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  DefaultButton(
-                    content: "Lundi",
-                    fontSize: 28,
-                    paddingLeftRight: 20,
-                    paddingTopBottom: 20,
-                    disabled: isPresent(0),
-                    onPressed: addSession(0),
+          Container(
+            margin: const EdgeInsets.only(top: 20, bottom: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    spacing: 15,
+                    runSpacing: 55,
+                    children: weekDef.entries
+                        .map(
+                          (e) => DefaultButton(
+                            content: e.key,
+                            fontSize: fontSize,
+                            paddingLeftRight: 20,
+                            paddingTopBottom: 20,
+                            disabled: isPresent(e.value),
+                            onPressed: addSession(e.value),
+                          ),
+                        )
+                        .toList(),
                   ),
-                  DefaultButton(
-                    content: "Mardi",
-                    fontSize: 28,
-                    paddingLeftRight: 20,
-                    paddingTopBottom: 20,
-                    disabled: isPresent(1),
-                    onPressed: addSession(1),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  DefaultButton(
-                    content: "Mercredi",
-                    fontSize: 28,
-                    paddingLeftRight: 20,
-                    paddingTopBottom: 20,
-                    disabled: isPresent(2),
-                    onPressed: addSession(2),
-                  ),
-                  DefaultButton(
-                    content: "Jeudi",
-                    fontSize: 28,
-                    paddingLeftRight: 20,
-                    paddingTopBottom: 20,
-                    disabled: isPresent(3),
-                    onPressed: addSession(3),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  DefaultButton(
-                    content: "Vendredi",
-                    fontSize: 28,
-                    paddingLeftRight: 20,
-                    paddingTopBottom: 20,
-                    disabled: isPresent(4),
-                    onPressed: addSession(4),
-                  ),
-                  DefaultButton(
-                    content: "Samedi",
-                    fontSize: 28,
-                    paddingLeftRight: 20,
-                    paddingTopBottom: 20,
-                    disabled: isPresent(5),
-                    onPressed: addSession(5),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  DefaultButton(
-                    content: "Dimanche",
-                    fontSize: 28,
-                    paddingLeftRight: 20,
-                    paddingTopBottom: 20,
-                    disabled: isPresent(6),
-                    onPressed: addSession(6),
-                  )
-                ],
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ]),
       ),
