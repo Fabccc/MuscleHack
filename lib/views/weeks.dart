@@ -6,6 +6,7 @@ import 'package:musclatax/components/title.dart';
 import 'package:musclatax/models/access.dart';
 import 'package:musclatax/models/train.dart';
 import 'package:musclatax/views/week.dart';
+import 'package:musclatax/components/utils.dart' as mutils;
 
 class WeekList extends StatefulWidget {
   const WeekList({Key? key}) : super(key: key);
@@ -16,6 +17,12 @@ class WeekList extends StatefulWidget {
 
 class _WeekListState extends State<WeekList> {
   List<Week> weeks = [];
+
+  bool _containsWeek(Week week) {
+    return weeks.any((w) =>
+        mutils.DateUtils.weekNumber(week.dateTime) ==
+        mutils.DateUtils.weekNumber(w.dateTime));
+  }
 
   @override
   void initState() {
@@ -83,7 +90,7 @@ class _WeekListState extends State<WeekList> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.large(
         child: const Icon(
           Icons.add,
           color: Colors.white,
@@ -91,6 +98,9 @@ class _WeekListState extends State<WeekList> {
         elevation: 5,
         onPressed: () async {
           Week newWeek = Week(-1, DateTime.now());
+          if (_containsWeek(newWeek)) {
+            return;
+          }
           DBAccess.insertNewWeek(newWeek);
           _initAsyncState();
         },
