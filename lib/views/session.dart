@@ -62,7 +62,7 @@ class _SessionDisplayState extends State<SessionDisplay> {
                   itemCount: segments.length))
         ],
       )),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.large(
         child: const Icon(
           Icons.add,
           color: Colors.white,
