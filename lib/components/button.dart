@@ -42,12 +42,12 @@ class NeumophirsmButton extends StatelessWidget {
       {intensity = difference}) {
     return [
       BoxShadow(
-        color: ColorUtils.colorLuminanceTweaked(color, intensity * -1),
+        color: ColorUtils.colorLuminance(color, intensity * -1),
         offset: Offset(distance, distance),
         blurRadius: blur,
       ),
       BoxShadow(
-        color: ColorUtils.colorLuminanceTweaked(color, intensity),
+        color: ColorUtils.colorLuminance(color, intensity),
         offset: Offset(-distance, -distance),
         blurRadius: blur,
       )

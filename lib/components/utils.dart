@@ -22,9 +22,26 @@ class DateUtils {
 
 class ColorUtils {
   static Color colorLuminance(Color color, double lum) {
-    return HSLColor.fromColor(color).withLightness(lum).toColor();
+    double r, g, b;
+    r = color.red.toDouble();
+    g = color.green.toDouble();
+    b = color.blue.toDouble();
+
+    r = min(max(0, r + r * lum), 255);
+    g = min(max(0, g + g * lum), 255);
+    b = min(max(0, b + b * lum), 255);
+
+    return Color.fromARGB(color.alpha, r.round(), g.round(), b.round());
   }
 
+  /// Retourne une couleur avec la luminosité changé
+  ///
+  /// Permet le calcul d'une nouvelle couleur en fonction de
+  /// son point d'origine [color] ainsi qu'un pourcentage de luminosité
+  /// [lum] (si [lum] ``< 0`` alors on baissera la luminosité)
+  ///
+  /// Fonction prise du site [neumorphism css](https://neumorphism.io/)
+  @Deprecated("fonction lente car utilise des strings")
   static Color colorLuminanceTweaked(Color color, double lum) {
     // validate hex string
     String hex = color.toHex().replaceAll("#", '');
