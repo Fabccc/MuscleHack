@@ -13,6 +13,8 @@ class NeumophirsmButton extends StatelessWidget {
   Color backgroundColor;
   Color color;
   double colorDifference;
+  double fontSize;
+  bool disabled;
 
   NeumophirsmButton(
       {Key? key,
@@ -23,7 +25,9 @@ class NeumophirsmButton extends StatelessWidget {
       this.backgroundColor = const Color(0xffe0e0e0),
       this.color = const Color(0xff48acfc),
       this.colorDifference = 0.15,
-      this.minWidth = 88})
+      this.minWidth = 88,
+      this.fontSize = 18,
+      this.disabled = false})
       : super(key: key);
 
   /*
@@ -54,31 +58,49 @@ class NeumophirsmButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            minimumSize: Size(minWidth, 36),
-            backgroundColor: const Color(0xffffffff),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            side: const BorderSide(width: 0, color: Colors.transparent)),
-        onPressed: () {
-          if (onPressed != null) {
-            onPressed!();
-          }
-        },
+        style: disabled ? _disabledButton() : _enabledButton(),
+        onPressed: disabled
+            ? null
+            : () {
+                if (onPressed != null) {
+                  onPressed!();
+                }
+              },
         child: Padding(
           padding: EdgeInsets.symmetric(
               vertical: vertical.toDouble(), horizontal: horizontal.toDouble()),
           child: Text(content,
               style: TextStyle(
-                  color: color,
-                  fontSize: 18,
+                  color: disabled ? const Color(0xff999999) : color,
+                  fontSize: fontSize,
                   fontFamily: "Ubuntu",
                   fontWeight: FontWeight.normal)),
         ),
       ),
       decoration: BoxDecoration(
-          boxShadow:
-              calcShadow(backgroundColor, 40, 20, intensity: colorDifference)),
+          boxShadow: calcShadow(
+              disabled ? const Color(0xffB3B3B3) : backgroundColor, 40, 20,
+              intensity: colorDifference)),
+    );
+  }
+
+  dynamic _enabledButton() {
+    return OutlinedButton.styleFrom(
+        minimumSize: Size(minWidth, 36),
+        backgroundColor: const Color(0xffffffff),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        side: const BorderSide(width: 0, color: Colors.transparent));
+  }
+
+  dynamic _disabledButton() {
+    return OutlinedButton.styleFrom(
+      elevation: 10,
+      shadowColor: Colors.black,
+      backgroundColor: const Color(0xffB3B3B3),
+      side: const BorderSide(width: 0, color: Colors.transparent),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
     );
   }
 }
