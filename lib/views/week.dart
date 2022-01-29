@@ -125,7 +125,7 @@ class _WeekDisplayState extends State<WeekDisplay> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.large(
           child: const Icon(
             Icons.add,
             color: Colors.white,
@@ -203,11 +203,12 @@ class _AddSessionInWeek extends StatelessWidget {
                     runSpacing: 55,
                     children: weekDef.entries
                         .map(
-                          (e) => DefaultButton(
+                          (e) => NeumophirsmButton(
                             content: e.key,
-                            fontSize: fontSize,
-                            paddingLeftRight: 20,
-                            paddingTopBottom: 20,
+                            color: const Color(0xff030303),
+                            fontSize: fontSize.toDouble(),
+                            horizontal: 20,
+                            vertical: 20,
                             disabled: isPresent(e.value),
                             onPressed: addSession(e.value),
                           ),
