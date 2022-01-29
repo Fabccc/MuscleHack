@@ -97,6 +97,7 @@ class Session {
       height: 50,
       child: Center(
         child: StandarText(
+          fontSize: 20,
           text: extracted.toString(),
         ),
       ),
