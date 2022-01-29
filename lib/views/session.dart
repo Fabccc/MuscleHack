@@ -86,27 +86,27 @@ class SegmentCreate extends StatelessWidget {
   const SegmentCreate({Key? key, required this.session, required this.id})
       : super(key: key);
 
+  Widget _createTab(BuildContext context, SegmentType type) {
+    const double topbottom = 28;
+    return Container(
+      margin: const EdgeInsets.only(top: topbottom, bottom: topbottom),
+      child: NeumophirsmButton(
+        content: type.name,
+        colorDifference: 0.10,
+        minWidth: 200,
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SegmentCreateOptions(
+                      session: session, id: id, type: type)));
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    createTab(SegmentType type) {
-      const double topbottom = 17;
-      return Container(
-        margin: const EdgeInsets.only(top: topbottom, bottom: topbottom),
-        child: NeumophirsmButton(
-          content: type.name,
-          colorDifference: 0.25,
-          minWidth: 200,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SegmentCreateOptions(
-                        session: session, id: id, type: type)));
-          },
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: const Color(0xffe0e0e0),
       body: DefaultContainer(
@@ -118,7 +118,9 @@ class SegmentCreate extends StatelessWidget {
               margin: const EdgeInsets.only(top: 25),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: SegmentType.values.map(createTab).toList(),
+                children: SegmentType.values
+                    .map((e) => _createTab(context, e))
+                    .toList(),
               ),
             )
           ],
@@ -148,9 +150,11 @@ class _SegmentCreateOptionsState extends State<SegmentCreateOptions> {
       body: DefaultContainer(
         child: Column(
           children: [
+            HeaderText(text: widget.type.name),
             Flexible(
                 child: StandarText(
               text: widget.type.desc,
+              fontSize: 18,
             )),
           ],
         ),
