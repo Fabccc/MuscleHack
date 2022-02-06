@@ -84,7 +84,7 @@ class NeumophirsmButton extends StatelessWidget {
     );
   }
 
-  dynamic _enabledButton() {
+  ButtonStyle _enabledButton() {
     return OutlinedButton.styleFrom(
         minimumSize: Size(minWidth, 36),
         backgroundColor: const Color(0xffffffff),
@@ -93,7 +93,7 @@ class NeumophirsmButton extends StatelessWidget {
         side: const BorderSide(width: 0, color: Colors.transparent));
   }
 
-  dynamic _disabledButton() {
+  ButtonStyle _disabledButton() {
     return OutlinedButton.styleFrom(
       elevation: 10,
       shadowColor: Colors.black,
@@ -186,7 +186,7 @@ class DefaultButton extends StatelessWidget {
     );
   }
 
-  dynamic _enabledButton() {
+  ButtonStyle _enabledButton() {
     return OutlinedButton.styleFrom(
       elevation: 10,
       shadowColor: Colors.black,
@@ -197,7 +197,7 @@ class DefaultButton extends StatelessWidget {
     );
   }
 
-  dynamic _disabledButton() {
+  ButtonStyle _disabledButton() {
     return OutlinedButton.styleFrom(
       elevation: 10,
       shadowColor: Colors.black,
