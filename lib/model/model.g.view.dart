@@ -1,0 +1,151 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// **************************************************************************
+// SqfEntityFormGenerator
+// **************************************************************************
+
+part of 'model.dart';
+
+//ignore: must_be_immutable
+class ExerciceAdd extends StatefulWidget {
+  ExerciceAdd([this._exercice]) {
+    _exercice ??= Exercice();
+  }
+  dynamic _exercice;
+  @override
+  State<StatefulWidget> createState() =>
+      ExerciceAddState(_exercice as Exercice);
+}
+
+class ExerciceAddState extends State {
+  ExerciceAddState(this.exercice);
+  Exercice exercice;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController txtName = TextEditingController();
+  final TextEditingController txtRest = TextEditingController();
+  final TextEditingController txtReps = TextEditingController();
+  final TextEditingController txtDay = TextEditingController();
+
+  @override
+  void initState() {
+    txtName.text = exercice.name == null ? '' : exercice.name.toString();
+    txtRest.text = exercice.rest == null ? '' : exercice.rest.toString();
+    txtReps.text = exercice.reps == null ? '' : exercice.reps.toString();
+    txtDay.text = exercice.day == null ? '' : exercice.day.toString();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: (exercice.id == null)
+            ? Text('Add a new exercice')
+            : Text('Edit exercice'),
+      ),
+      body: Container(
+        alignment: Alignment.topCenter,
+        width: double.infinity,
+        height: double.infinity,
+        child: SingleChildScrollView(
+          child: Padding(
+              padding: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    buildRowName(),
+                    buildRowRest(),
+                    buildRowReps(),
+                    buildRowDay(),
+                    saveButton()
+                  ],
+                ),
+              )),
+        ),
+      ),
+    );
+  }
+
+  Widget buildRowName() {
+    return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter Name';
+        }
+        return null;
+      },
+      controller: txtName,
+      decoration: InputDecoration(labelText: 'Name'),
+    );
+  }
+
+  Widget buildRowRest() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isNotEmpty && int.tryParse(value) == null) {
+          return 'Please Enter valid number';
+        }
+
+        return null;
+      },
+      controller: txtRest,
+      decoration: InputDecoration(labelText: 'Rest'),
+    );
+  }
+
+  Widget buildRowReps() {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isNotEmpty && int.tryParse(value) == null) {
+          return 'Please Enter valid number';
+        }
+
+        return null;
+      },
+      controller: txtReps,
+      decoration: InputDecoration(labelText: 'Reps'),
+    );
+  }
+
+  Widget buildRowDay() {
+    return TextFormField(
+      validator: (value) {
+        if (int.tryParse(value!) == null) {
+          return 'Please Enter valid number (required)';
+        }
+
+        return null;
+      },
+      controller: txtDay,
+      decoration: InputDecoration(labelText: 'Day'),
+    );
+  }
+
+  Widget saveButton() {
+    return ElevatedButton(
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          save();
+        }
+      },
+      child: Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
+    );
+  }
+
+  void save() async {
+    exercice
+      ..name = txtName.text
+      ..rest = int.tryParse(txtRest.text)
+      ..reps = int.tryParse(txtReps.text)
+      ..day = int.tryParse(txtDay.text);
+    await exercice.save();
+    if (exercice.saveResult!.success) {
+      Navigator.pop(context, true);
+    } else {
+      UITools(context).alertDialog(exercice.saveResult.toString(),
+          title: 'saving Failed!', callBack: () {});
+    }
+  }
+}

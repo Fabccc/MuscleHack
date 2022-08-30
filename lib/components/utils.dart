@@ -6,6 +6,32 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 class DateUtils {
+  static const Map<int, String> _dayName = {
+    1: "Lundi",
+    2: "Mardi",
+    3: "Mercredi",
+    4: "Jeudi",
+    5: "Vendredi",
+    6: "Samedi",
+    7: "Dimanche"
+  };
+
+  static String formatSecond(int seconds) {
+    Duration duration = Duration(seconds: seconds);
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  static int dayNumber() {
+    return DateTime.now().weekday;
+  }
+
+  static String dayName(int weekday) {
+    return _dayName[weekday] ?? "monday";
+  }
+
   static int weekNumber(DateTime date) {
     int dayOfYear = int.parse(DateFormat("D").format(date));
     return ((dayOfYear - date.weekday + 10) / 7).floor();

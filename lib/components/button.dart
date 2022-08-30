@@ -4,6 +4,7 @@ import 'package:musclatax/components/utils.dart';
 
 class NeumophirsmButton extends StatelessWidget {
   static const double difference = 0.15;
+  static const double borderRadius = 30;
 
   final Function? onPressed;
   final String content;
@@ -54,27 +55,35 @@ class NeumophirsmButton extends StatelessWidget {
     ];
   }
 
+// Card(
+//       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: OutlinedButton(
-        style: disabled ? _disabledButton() : _enabledButton(),
-        onPressed: disabled
-            ? null
-            : () {
-                if (onPressed != null) {
-                  onPressed!();
-                }
-              },
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: vertical.toDouble(), horizontal: horizontal.toDouble()),
-          child: Text(content,
-              style: TextStyle(
-                  color: disabled ? const Color(0xff999999) : color,
-                  fontSize: fontSize,
-                  fontFamily: "Ubuntu",
-                  fontWeight: FontWeight.normal)),
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+        child: OutlinedButton(
+          style: disabled ? _disabledButton() : _enabledButton(),
+          onPressed: disabled
+              ? null
+              : () {
+                  if (onPressed != null) {
+                    onPressed!();
+                  }
+                },
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: vertical.toDouble(),
+                horizontal: horizontal.toDouble()),
+            child: Text(content,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: disabled ? const Color(0xff999999) : color,
+                    fontSize: fontSize,
+                    fontFamily: "Ubuntu",
+                    fontWeight: FontWeight.normal)),
+          ),
         ),
       ),
       decoration: BoxDecoration(
@@ -89,7 +98,7 @@ class NeumophirsmButton extends StatelessWidget {
         minimumSize: Size(minWidth, 36),
         backgroundColor: const Color(0xffffffff),
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+            borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
         side: const BorderSide(width: 0, color: Colors.transparent));
   }
 
@@ -100,7 +109,7 @@ class NeumophirsmButton extends StatelessWidget {
       backgroundColor: const Color(0xffB3B3B3),
       side: const BorderSide(width: 0, color: Colors.transparent),
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+          borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
     );
   }
 }

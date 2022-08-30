@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:musclatax/components/button.dart';
 import 'package:musclatax/components/container.dart';
-import 'package:musclatax/views/weeks.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:musclatax/views/main/edit_week.dart';
+import 'package:musclatax/views/main/launch_week.dart';
 
 void main() {
   initializeDateFormatting("fr_FR", null);
@@ -33,21 +34,28 @@ class MusclataxMainMenu extends StatelessWidget {
       backgroundColor: const Color(0xffe0e0e0),
       body: DefaultContainer(
         topbottom: 200,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: GridView.count(
+          crossAxisCount: 2,
           children: [
             NeumophirsmButton(
               onPressed: () => {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const WeekList()))
+                    MaterialPageRoute(builder: (context) => const EditWeek()))
               },
-              content: "Liste semaines",
-              colorDifference: 0.25,
+              content: "Editer les semaines",
+              colorDifference: 0.10,
+            ),
+            NeumophirsmButton(
+              onPressed: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const LaunchWeek()))
+              },
+              content: "Lancer une séance",
+              colorDifference: 0.10,
             ),
             NeumophirsmButton(
               content: "Statistiques",
-              colorDifference: 0.25,
+              colorDifference: 0.10,
             )
           ],
         ),
