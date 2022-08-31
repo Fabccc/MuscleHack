@@ -12,12 +12,13 @@ class WhiteNeumorphismButton extends NeumophirsmButton {
       super.onPressed,
       super.colorDifference,
       super.disabled,
-      super.fontSize})
+      super.fontSize,
+      super.backgroundColor,
+      super.color,
+      super.minWidth,
+      super.horizontal,
+      super.vertical})
       : super(key: key, content: content, boxShadows: [
-//         border-radius: 50px;
-// background: #e0e0e0;
-// box-shadow:  31px 31px 62px #bebebe,
-//              -31px -31px 62px #ffffff;
           !disabled
               ? const BoxShadow(
                   color: Color(0xbebebeFF),
@@ -51,6 +52,8 @@ class NeumophirsmButton extends StatelessWidget {
   Color color;
   double colorDifference;
   double fontSize;
+  // double horizontalPadding;
+  // double verticalPadding;
   bool disabled;
   List<BoxShadow> boxShadows;
 
@@ -136,6 +139,8 @@ class NeumophirsmButton extends StatelessWidget {
 
   ButtonStyle _enabledButton() {
     return ButtonStyle(
+        padding:
+            MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(20)),
         backgroundColor: MaterialStateProperty.all<Color>(backgroundColor),
         side: MaterialStateProperty.all<BorderSide>(
             const BorderSide(width: 0, color: Colors.transparent)),

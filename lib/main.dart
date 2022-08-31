@@ -7,9 +7,11 @@ import 'package:musclatax/model/model.dart';
 import 'package:musclatax/views/main/edit_week.dart';
 import 'package:musclatax/views/main/launch_week.dart';
 import 'package:musclatax/components/utils.dart' as uu;
+import 'package:musclatax/views/seance/seance_running.dart';
 
-void main() {
+Future<void> main() async {
   initializeDateFormatting("fr_FR", null);
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const Musclatax());
 }
 
@@ -38,13 +40,14 @@ class MusclataxMainMenu extends StatelessWidget {
         topbottom: 200,
         child: GridView.count(
           crossAxisCount: 2,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             WhiteNeumorphismButton(
               onPressed: () => {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const EditWeek()))
               },
-              content: "Editer les semaines",
+              content: "Editer la semaine",
               colorDifference: 0.10,
             ),
             WhiteNeumorphismButton(
@@ -61,6 +64,7 @@ class MusclataxMainMenu extends StatelessWidget {
                             )));
               },
               content: "Lancer une séance",
+              fontSize: 16,
               colorDifference: 0.10,
             ),
             WhiteNeumorphismButton(

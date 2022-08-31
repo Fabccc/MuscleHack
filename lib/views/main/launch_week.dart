@@ -5,6 +5,7 @@ import 'package:musclatax/components/utils.dart' as uu;
 import 'package:musclatax/model/model.dart';
 import 'package:musclatax/tools/helper.dart';
 import 'package:musclatax/views/edit/row_day.dart';
+import 'package:musclatax/views/seance/seance_running.dart';
 
 class LaunchWeek extends StatelessWidget {
   int currentDay;
@@ -50,7 +51,19 @@ class LaunchWeek extends StatelessWidget {
         ]),
       ),
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () async {
+            // On démarre le service
+            await SeanceIsolate.initializeService();
+            // On lance la vue
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SeanceRunning(
+                          exercices: exercices,
+                        )));
+            // Quand on revient derrière on stop le service
+            await SeanceIsolate.stop();
+          },
           label: const Text("LANCER"),
           backgroundColor: UITools.mainBgColor,
           icon: const Icon(

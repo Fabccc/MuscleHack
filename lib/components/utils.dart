@@ -105,3 +105,10 @@ extension HexColor on Color {
       '${green.toRadixString(16).padLeft(2, '0')}'
       '${blue.toRadixString(16).padLeft(2, '0')}';
 }
+
+class MathUtils {
+  static double map(
+      double val, double iMin, double iMax, double oMin, double oMax) {
+    return (val - iMin) * (oMax - oMin) / (iMax - iMin) + oMin;
+  }
+}

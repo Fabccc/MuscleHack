@@ -14,6 +14,8 @@ class UITools {
 // BEGIN MAIN CONTROLLER DESIGN
 
   static const mainBgColor = Color.fromARGB(255, 49, 131, 212);
+  static const mainBgSuccessColor = Color.fromARGB(255, 16, 176, 77);
+  static const mainBgErrorColor = Color.fromARGB(255, 159, 20, 20);
   static const mainAlertColor = Color.fromARGB(255, 26, 32, 86);
   static const mainBgColorLighter = Color.fromARGB(255, 63, 204, 166);
   static const mainItemBgColor = Color.fromARGB(242, 15, 88, 223);
