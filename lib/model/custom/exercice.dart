@@ -12,12 +12,24 @@ class ExerciceListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String name = exercice.name ?? "??";
     int repos = exercice.rest ?? 120;
-    int reps = exercice.reps ?? 4;
+    int reps = exercice.reps ?? 8;
+    int series = exercice.series ?? 4;
 
     String formatRepos = uu.DateUtils.formatSecond(repos);
 
     return Column(
-      children: [Text(name), Text("Série: $reps, Repos: $formatRepos")],
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          name,
+          textAlign: TextAlign.left,
+        ),
+        Text(
+          "$series série de $reps reps avec $formatRepos de repos",
+          textAlign: TextAlign.left,
+          style: const TextStyle(fontStyle: FontStyle.italic),
+        )
+      ],
     );
   }
 }

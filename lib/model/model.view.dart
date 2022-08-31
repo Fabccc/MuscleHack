@@ -1,9 +1,3 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
-// **************************************************************************
-// SqfEntityFormGenerator
-// **************************************************************************
-
 part of 'model.dart';
 
 //ignore: must_be_immutable
@@ -23,6 +17,7 @@ class ExerciceAddState extends State {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController txtName = TextEditingController();
   final TextEditingController txtRest = TextEditingController();
+  final TextEditingController txtSeries = TextEditingController();
   final TextEditingController txtReps = TextEditingController();
   final TextEditingController txtDay = TextEditingController();
 
@@ -30,6 +25,7 @@ class ExerciceAddState extends State {
   void initState() {
     txtName.text = exercice.name == null ? '' : exercice.name.toString();
     txtRest.text = exercice.rest == null ? '' : exercice.rest.toString();
+    txtSeries.text = exercice.series == null ? '' : exercice.series.toString();
     txtReps.text = exercice.reps == null ? '' : exercice.reps.toString();
     txtDay.text = exercice.day == null ? '' : exercice.day.toString();
 
@@ -40,9 +36,10 @@ class ExerciceAddState extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: UITools.mainBgColor,
         title: (exercice.id == null)
-            ? Text('Add a new exercice')
-            : Text('Edit exercice'),
+            ? Text("Ajout d'un nouvel exercice")
+            : Text('Modifier un exercice'),
       ),
       body: Container(
         alignment: Alignment.topCenter,
@@ -57,8 +54,8 @@ class ExerciceAddState extends State {
                   children: <Widget>[
                     buildRowName(),
                     buildRowRest(),
+                    buildRowSeries(),
                     buildRowReps(),
-                    buildRowDay(),
                     saveButton()
                   ],
                 ),
@@ -77,35 +74,64 @@ class ExerciceAddState extends State {
         return null;
       },
       controller: txtName,
-      decoration: InputDecoration(labelText: 'Name'),
+      decoration: const InputDecoration(labelText: "Nom de l'Exercice"),
     );
   }
 
   Widget buildRowRest() {
     return TextFormField(
+      keyboardType: TextInputType.number,
       validator: (value) {
         if (value!.isNotEmpty && int.tryParse(value) == null) {
-          return 'Please Enter valid number';
+          return 'Temps de repos invalide';
+        }
+        int restTime = int.parse(value);
+        if (restTime <= 0) {
+          return 'Temps de repos invalide (<= 0)';
         }
 
         return null;
       },
       controller: txtRest,
-      decoration: InputDecoration(labelText: 'Rest'),
+      decoration: const InputDecoration(labelText: 'Temps de repos'),
+    );
+  }
+
+  Widget buildRowSeries() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      validator: (value) {
+        if (value!.isNotEmpty && int.tryParse(value) == null) {
+          return 'Nombre de series invalide';
+        }
+        int restTime = int.parse(value);
+        if (restTime <= 0) {
+          return 'Nombre de series invalide (<= 0)';
+        }
+
+        return null;
+      },
+      controller: txtSeries,
+      decoration: const InputDecoration(labelText: 'Series'),
     );
   }
 
   Widget buildRowReps() {
     return TextFormField(
+      keyboardType: TextInputType.number,
       validator: (value) {
         if (value!.isNotEmpty && int.tryParse(value) == null) {
-          return 'Please Enter valid number';
+          return 'Nombre de reps invalide';
+        }
+        int restTime = int.parse(value);
+        if (restTime <= 0) {
+          return 'Nombre de reps invalide (<= 0)';
         }
 
         return null;
       },
       controller: txtReps,
-      decoration: InputDecoration(labelText: 'Reps'),
+      decoration: const InputDecoration(labelText: 'Reps'),
     );
   }
 
@@ -138,6 +164,7 @@ class ExerciceAddState extends State {
     exercice
       ..name = txtName.text
       ..rest = int.tryParse(txtRest.text)
+      ..series = int.tryParse(txtSeries.text)
       ..reps = int.tryParse(txtReps.text)
       ..day = int.tryParse(txtDay.text);
     await exercice.save();

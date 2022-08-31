@@ -7,7 +7,7 @@ import 'package:sqfentity_gen/sqfentity_gen.dart';
 import 'package:http/http.dart' as http;
 import 'package:musclatax/tools/helper.dart';
 part 'model.g.dart';
-part 'model.g.view.dart';
+part 'model.view.dart';
 
 const SqfEntityTable tableExercices = SqfEntityTable(
     tableName: "exercices",
@@ -17,7 +17,8 @@ const SqfEntityTable tableExercices = SqfEntityTable(
     fields: [
       SqfEntityField("name", DbType.text, isNotNull: true),
       SqfEntityField("rest", DbType.integer, defaultValue: 60),
-      SqfEntityField("reps", DbType.integer, defaultValue: 4),
+      SqfEntityField("series", DbType.integer, defaultValue: 4),
+      SqfEntityField("reps", DbType.integer, defaultValue: 8),
       SqfEntityField("day", DbType.integer, isNotNull: true)
     ]);
 
@@ -32,7 +33,7 @@ const SqfEntityTable tablePerformed = SqfEntityTable(
           fieldName: "exercice",
           isNotNull: true,
           isPrimaryKeyField: false),
-      SqfEntityField("repsIndex", DbType.integer, isNotNull: true),
+      SqfEntityField("seriesIndex", DbType.integer, isNotNull: true),
       SqfEntityField("weight", DbType.integer, isNotNull: true),
       SqfEntityField("date", DbType.datetimeUtc, isNotNull: true)
     ]);

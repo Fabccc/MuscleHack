@@ -19,7 +19,7 @@ class EditWeek extends StatelessWidget {
             child: GridView.count(
               crossAxisCount: 2,
               children: dayOfWeek
-                  .map((day) => NeumophirsmButton(
+                  .map((day) => WhiteNeumorphismButton(
                         onPressed: () => {
                           Navigator.push(
                               context,

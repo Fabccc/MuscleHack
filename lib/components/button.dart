@@ -2,6 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:musclatax/components/utils.dart';
 
+// ignore: must_be_immutable
+const double distance = 25;
+
+class WhiteNeumorphismButton extends NeumophirsmButton {
+  WhiteNeumorphismButton(
+      {Key? key,
+      required String content,
+      super.onPressed,
+      super.colorDifference,
+      super.disabled,
+      super.fontSize})
+      : super(key: key, content: content, boxShadows: [
+//         border-radius: 50px;
+// background: #e0e0e0;
+// box-shadow:  31px 31px 62px #bebebe,
+//              -31px -31px 62px #ffffff;
+          !disabled
+              ? const BoxShadow(
+                  color: Color(0xbebebeFF),
+                  offset: Offset(distance, distance),
+                  blurRadius: 62,
+                )
+              : const BoxShadow(
+                  color: Color.fromARGB(189, 181, 181, 181),
+                  offset: Offset(distance, distance),
+                  blurRadius: 62,
+                ),
+          const BoxShadow(
+            color: Color(0xFFFFFFFF),
+            offset: Offset(-distance, -distance),
+            blurRadius: 62,
+          )
+        ]);
+}
+
+// ignore: must_be_immutable
 class NeumophirsmButton extends StatelessWidget {
   static const double difference = 0.15;
   static const double borderRadius = 30;
@@ -16,6 +52,7 @@ class NeumophirsmButton extends StatelessWidget {
   double colorDifference;
   double fontSize;
   bool disabled;
+  List<BoxShadow> boxShadows;
 
   NeumophirsmButton(
       {Key? key,
@@ -23,12 +60,13 @@ class NeumophirsmButton extends StatelessWidget {
       this.onPressed,
       this.horizontal = 5,
       this.vertical = 15,
-      this.backgroundColor = const Color(0xffe0e0e0),
+      this.backgroundColor = const Color(0xFFF1F1F1),
       this.color = const Color(0xff48acfc),
       this.colorDifference = 0.15,
       this.minWidth = 88,
       this.fontSize = 18,
-      this.disabled = false})
+      this.disabled = false,
+      this.boxShadows = const []})
       : super(key: key);
 
   /*
@@ -60,57 +98,59 @@ class NeumophirsmButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ButtonStyle bStyle = disabled ? _disabledButton() : _enabledButton();
+
     return Container(
-      child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-        child: OutlinedButton(
-          style: disabled ? _disabledButton() : _enabledButton(),
-          onPressed: disabled
-              ? null
-              : () {
-                  if (onPressed != null) {
-                    onPressed!();
-                  }
-                },
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: vertical.toDouble(),
-                horizontal: horizontal.toDouble()),
-            child: Text(content,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: disabled ? const Color(0xff999999) : color,
-                    fontSize: fontSize,
-                    fontFamily: "Ubuntu",
-                    fontWeight: FontWeight.normal)),
-          ),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+      child: TextButton(
+        style: bStyle,
+        onPressed: disabled
+            ? null
+            : () {
+                if (onPressed != null) {
+                  onPressed!();
+                }
+              },
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: vertical.toDouble(), horizontal: horizontal.toDouble()),
+          child: Text(content,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: disabled ? const Color(0xff999999) : color,
+                  fontSize: fontSize,
+                  fontFamily: "Ubuntu",
+                  fontWeight: FontWeight.normal)),
         ),
       ),
       decoration: BoxDecoration(
-          boxShadow: calcShadow(
-              disabled ? const Color(0xffB3B3B3) : backgroundColor, 40, 20,
-              intensity: colorDifference)),
+          borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: boxShadows.length > 0
+              ? boxShadows
+              : calcShadow(
+                  disabled ? const Color(0xffB3B3B3) : backgroundColor, 10, 7,
+                  intensity: colorDifference)),
     );
   }
 
   ButtonStyle _enabledButton() {
-    return OutlinedButton.styleFrom(
-        minimumSize: Size(minWidth, 36),
-        backgroundColor: const Color(0xffffffff),
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
-        side: const BorderSide(width: 0, color: Colors.transparent));
+    return ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(backgroundColor),
+        side: MaterialStateProperty.all<BorderSide>(
+            const BorderSide(width: 0, color: Colors.transparent)),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderRadius))));
   }
 
   ButtonStyle _disabledButton() {
     return OutlinedButton.styleFrom(
-      elevation: 10,
-      shadowColor: Colors.black,
-      backgroundColor: const Color(0xffB3B3B3),
-      side: const BorderSide(width: 0, color: Colors.transparent),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
-    );
+        shadowColor: Colors.black,
+        backgroundColor: const Color(0xffB3B3B3),
+        side: const BorderSide(width: 0, color: Colors.transparent),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius)));
   }
 }
 

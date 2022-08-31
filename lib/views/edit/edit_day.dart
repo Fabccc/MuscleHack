@@ -26,10 +26,10 @@ class _EditDayState extends State<EditDay> {
   @override
   void initState() {
     super.initState();
-    _initAsyncState();
+    _updateData();
   }
 
-  void _initAsyncState() async {
+  void _updateData() async {
     var _sessions = await _fetchData();
     setState(() {
       data = _sessions;
@@ -45,7 +45,8 @@ class _EditDayState extends State<EditDay> {
     return Scaffold(
         backgroundColor: const Color(0xffe0e0e0),
         body: DefaultContainer(
-            topbottom: 200,
+            topbottom: 150,
+            leftright: 10,
             child: Column(
               children: [
                 HeaderText(text: uu.DateUtils.dayName(dayOfWeek)),
@@ -58,12 +59,18 @@ class _EditDayState extends State<EditDay> {
                             ),
                         itemBuilder: (BuildContext context, int index) {
                           Exercice extracted = data[index];
-                          return RowDay(exercice: extracted);
+                          return RowDay(
+                            exercice: extracted,
+                            update: () {
+                              _updateData();
+                            },
+                            modify: true,
+                          );
                         },
                         itemCount: data.length))
               ],
             )),
-        floatingActionButton: FloatingActionButton.large(
+        floatingActionButton: FloatingActionButton(
           child: const Icon(
             Icons.add,
             color: Colors.white,
@@ -75,7 +82,7 @@ class _EditDayState extends State<EditDay> {
                 MaterialPageRoute(
                     builder: (context) =>
                         ExerciceAdd(Exercice(day: dayOfWeek))));
-            _initAsyncState();
+            _updateData();
           },
         ));
   }

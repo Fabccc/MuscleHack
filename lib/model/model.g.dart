@@ -35,7 +35,8 @@ class TableExercice extends SqfEntityTableBase {
     fields = [
       SqfEntityFieldBase('name', DbType.text, isNotNull: true),
       SqfEntityFieldBase('rest', DbType.integer, defaultValue: 60),
-      SqfEntityFieldBase('reps', DbType.integer, defaultValue: 4),
+      SqfEntityFieldBase('series', DbType.integer, defaultValue: 4),
+      SqfEntityFieldBase('reps', DbType.integer, defaultValue: 8),
       SqfEntityFieldBase('day', DbType.integer, isNotNull: true),
     ];
     super.init();
@@ -63,7 +64,7 @@ class TablePerformed extends SqfEntityTableBase {
           relationType: RelationType.ONE_TO_MANY,
           fieldName: 'exercice',
           isNotNull: true),
-      SqfEntityFieldBase('repsIndex', DbType.integer, isNotNull: true),
+      SqfEntityFieldBase('seriesIndex', DbType.integer, isNotNull: true),
       SqfEntityFieldBase('weight', DbType.integer, isNotNull: true),
       SqfEntityFieldBase('date', DbType.datetimeUtc,
           isNotNull: true, minValue: DateTime.parse('1900-01-01')),
@@ -130,14 +131,15 @@ class MyDbModel extends SqfEntityModelProvider {
 // BEGIN ENTITIES
 // region Exercice
 class Exercice extends TableBase {
-  Exercice({this.id, this.name, this.rest, this.reps, this.day}) {
+  Exercice({this.id, this.name, this.rest, this.series, this.reps, this.day}) {
     _setDefaultValues();
     softDeleteActivated = false;
   }
-  Exercice.withFields(this.name, this.rest, this.reps, this.day) {
+  Exercice.withFields(this.name, this.rest, this.series, this.reps, this.day) {
     _setDefaultValues();
   }
-  Exercice.withId(this.id, this.name, this.rest, this.reps, this.day) {
+  Exercice.withId(
+      this.id, this.name, this.rest, this.series, this.reps, this.day) {
     _setDefaultValues();
   }
   // fromMap v2.0
@@ -152,6 +154,9 @@ class Exercice extends TableBase {
     if (o['rest'] != null) {
       rest = int.tryParse(o['rest'].toString());
     }
+    if (o['series'] != null) {
+      series = int.tryParse(o['series'].toString());
+    }
     if (o['reps'] != null) {
       reps = int.tryParse(o['reps'].toString());
     }
@@ -163,6 +168,7 @@ class Exercice extends TableBase {
   int? id;
   String? name;
   int? rest;
+  int? series;
   int? reps;
   int? day;
 
@@ -207,6 +213,9 @@ class Exercice extends TableBase {
     if (rest != null || !forView) {
       map['rest'] = rest;
     }
+    if (series != null || !forView) {
+      map['series'] = series;
+    }
     if (reps != null || !forView) {
       map['reps'] = reps;
     }
@@ -229,6 +238,9 @@ class Exercice extends TableBase {
     }
     if (rest != null || !forView) {
       map['rest'] = rest;
+    }
+    if (series != null || !forView) {
+      map['series'] = series;
     }
     if (reps != null || !forView) {
       map['reps'] = reps;
@@ -260,12 +272,12 @@ class Exercice extends TableBase {
 
   @override
   List<dynamic> toArgs() {
-    return [name, rest, reps, day];
+    return [name, rest, series, reps, day];
   }
 
   @override
   List<dynamic> toArgsWithIds() {
-    return [id, name, rest, reps, day];
+    return [id, name, rest, series, reps, day];
   }
 
   static Future<List<Exercice>?> fromWebUrl(Uri uri,
@@ -445,8 +457,8 @@ class Exercice extends TableBase {
   Future<int?> upsert({bool ignoreBatch = true}) async {
     try {
       final result = await _mnExercice.rawInsert(
-          'INSERT OR REPLACE INTO exercices (id, name, rest, reps, day)  VALUES (?,?,?,?,?)',
-          [id, name, rest, reps, day],
+          'INSERT OR REPLACE INTO exercices (id, name, rest, series, reps, day)  VALUES (?,?,?,?,?,?)',
+          [id, name, rest, series, reps, day],
           ignoreBatch);
       if (result! > 0) {
         saveResult = BoolResult(
@@ -472,7 +484,7 @@ class Exercice extends TableBase {
   Future<BoolCommitResult> upsertAll(List<Exercice> exercices,
       {bool? exclusive, bool? noResult, bool? continueOnError}) async {
     final results = await _mnExercice.rawInsertAll(
-        'INSERT OR REPLACE INTO exercices (id, name, rest, reps, day)  VALUES (?,?,?,?,?)',
+        'INSERT OR REPLACE INTO exercices (id, name, rest, series, reps, day)  VALUES (?,?,?,?,?,?)',
         exercices,
         exclusive: exclusive,
         noResult: noResult,
@@ -527,7 +539,8 @@ class Exercice extends TableBase {
 
   void _setDefaultValues() {
     rest = rest ?? 60;
-    reps = reps ?? 4;
+    series = series ?? 4;
+    reps = reps ?? 8;
   }
 
   @override
@@ -747,6 +760,11 @@ class ExerciceFilterBuilder extends ConjunctionBase {
   ExerciceField? _rest;
   ExerciceField get rest {
     return _rest = _setField(_rest, 'rest', DbType.integer);
+  }
+
+  ExerciceField? _series;
+  ExerciceField get series {
+    return _series = _setField(_series, 'series', DbType.integer);
   }
 
   ExerciceField? _reps;
@@ -1081,6 +1099,12 @@ class ExerciceFields {
         _fRest ?? SqlSyntax.setField(_fRest, 'rest', DbType.integer);
   }
 
+  static TableField? _fSeries;
+  static TableField get series {
+    return _fSeries =
+        _fSeries ?? SqlSyntax.setField(_fSeries, 'series', DbType.integer);
+  }
+
   static TableField? _fReps;
   static TableField get reps {
     return _fReps =
@@ -1109,15 +1133,17 @@ class ExerciceManager extends SqfEntityProvider {
 //endregion ExerciceManager
 // region Performed
 class Performed extends TableBase {
-  Performed({this.id, this.exercice, this.repsIndex, this.weight, this.date}) {
+  Performed(
+      {this.id, this.exercice, this.seriesIndex, this.weight, this.date}) {
     _setDefaultValues();
     softDeleteActivated = false;
   }
-  Performed.withFields(this.exercice, this.repsIndex, this.weight, this.date) {
+  Performed.withFields(
+      this.exercice, this.seriesIndex, this.weight, this.date) {
     _setDefaultValues();
   }
   Performed.withId(
-      this.id, this.exercice, this.repsIndex, this.weight, this.date) {
+      this.id, this.exercice, this.seriesIndex, this.weight, this.date) {
     _setDefaultValues();
   }
   // fromMap v2.0
@@ -1128,8 +1154,8 @@ class Performed extends TableBase {
     id = int.tryParse(o['id'].toString());
     exercice = int.tryParse(o['exercice'].toString());
 
-    if (o['repsIndex'] != null) {
-      repsIndex = int.tryParse(o['repsIndex'].toString());
+    if (o['seriesIndex'] != null) {
+      seriesIndex = int.tryParse(o['seriesIndex'].toString());
     }
     if (o['weight'] != null) {
       weight = int.tryParse(o['weight'].toString());
@@ -1151,7 +1177,7 @@ class Performed extends TableBase {
   // FIELDS (Performed)
   int? id;
   int? exercice;
-  int? repsIndex;
+  int? seriesIndex;
   int? weight;
   DateTime? date;
 
@@ -1193,8 +1219,8 @@ class Performed extends TableBase {
     } else if (exercice != null || !forView) {
       map['exercice'] = null;
     }
-    if (repsIndex != null || !forView) {
-      map['repsIndex'] = repsIndex;
+    if (seriesIndex != null || !forView) {
+      map['seriesIndex'] = seriesIndex;
     }
     if (weight != null || !forView) {
       map['weight'] = weight;
@@ -1228,8 +1254,8 @@ class Performed extends TableBase {
     } else if (exercice != null || !forView) {
       map['exercice'] = null;
     }
-    if (repsIndex != null || !forView) {
-      map['repsIndex'] = repsIndex;
+    if (seriesIndex != null || !forView) {
+      map['seriesIndex'] = seriesIndex;
     }
     if (weight != null || !forView) {
       map['weight'] = weight;
@@ -1263,7 +1289,7 @@ class Performed extends TableBase {
   List<dynamic> toArgs() {
     return [
       exercice,
-      repsIndex,
+      seriesIndex,
       weight,
       date != null ? date!.millisecondsSinceEpoch : null
     ];
@@ -1274,7 +1300,7 @@ class Performed extends TableBase {
     return [
       id,
       exercice,
-      repsIndex,
+      seriesIndex,
       weight,
       date != null ? date!.millisecondsSinceEpoch : null
     ];
@@ -1450,11 +1476,11 @@ class Performed extends TableBase {
   Future<int?> upsert({bool ignoreBatch = true}) async {
     try {
       final result = await _mnPerformed.rawInsert(
-          'INSERT OR REPLACE INTO performed (id, exercice, repsIndex, weight, date)  VALUES (?,?,?,?,?)',
+          'INSERT OR REPLACE INTO performed (id, exercice, seriesIndex, weight, date)  VALUES (?,?,?,?,?)',
           [
             id,
             exercice,
-            repsIndex,
+            seriesIndex,
             weight,
             date != null ? date!.millisecondsSinceEpoch : null
           ],
@@ -1483,7 +1509,7 @@ class Performed extends TableBase {
   Future<BoolCommitResult> upsertAll(List<Performed> performeds,
       {bool? exclusive, bool? noResult, bool? continueOnError}) async {
     final results = await _mnPerformed.rawInsertAll(
-        'INSERT OR REPLACE INTO performed (id, exercice, repsIndex, weight, date)  VALUES (?,?,?,?,?)',
+        'INSERT OR REPLACE INTO performed (id, exercice, seriesIndex, weight, date)  VALUES (?,?,?,?,?)',
         performeds,
         exclusive: exclusive,
         noResult: noResult,
@@ -1748,9 +1774,10 @@ class PerformedFilterBuilder extends ConjunctionBase {
     return _exercice = _setField(_exercice, 'exercice', DbType.integer);
   }
 
-  PerformedField? _repsIndex;
-  PerformedField get repsIndex {
-    return _repsIndex = _setField(_repsIndex, 'repsIndex', DbType.integer);
+  PerformedField? _seriesIndex;
+  PerformedField get seriesIndex {
+    return _seriesIndex =
+        _setField(_seriesIndex, 'seriesIndex', DbType.integer);
   }
 
   PerformedField? _weight;
@@ -2005,10 +2032,10 @@ class PerformedFields {
         SqlSyntax.setField(_fExercice, 'exercice', DbType.integer);
   }
 
-  static TableField? _fRepsIndex;
-  static TableField get repsIndex {
-    return _fRepsIndex = _fRepsIndex ??
-        SqlSyntax.setField(_fRepsIndex, 'repsIndex', DbType.integer);
+  static TableField? _fSeriesIndex;
+  static TableField get seriesIndex {
+    return _fSeriesIndex = _fSeriesIndex ??
+        SqlSyntax.setField(_fSeriesIndex, 'seriesIndex', DbType.integer);
   }
 
   static TableField? _fWeight;

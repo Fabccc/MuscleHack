@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:musclatax/components/button.dart';
 import 'package:musclatax/components/container.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:musclatax/model/model.dart';
 import 'package:musclatax/views/main/edit_week.dart';
 import 'package:musclatax/views/main/launch_week.dart';
+import 'package:musclatax/components/utils.dart' as uu;
 
 void main() {
   initializeDateFormatting("fr_FR", null);
@@ -37,7 +39,7 @@ class MusclataxMainMenu extends StatelessWidget {
         child: GridView.count(
           crossAxisCount: 2,
           children: [
-            NeumophirsmButton(
+            WhiteNeumorphismButton(
               onPressed: () => {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const EditWeek()))
@@ -45,17 +47,27 @@ class MusclataxMainMenu extends StatelessWidget {
               content: "Editer les semaines",
               colorDifference: 0.10,
             ),
-            NeumophirsmButton(
-              onPressed: () => {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const LaunchWeek()))
+            WhiteNeumorphismButton(
+              onPressed: () async {
+                int currentDay = 1 /*uu.DateUtils.dayNumber()*/;
+                List<Exercice> exercices =
+                    await Exercice().select().day.equals(currentDay).toList();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LaunchWeek(
+                              currentDay: currentDay,
+                              exercices: exercices,
+                            )));
               },
               content: "Lancer une séance",
               colorDifference: 0.10,
             ),
-            NeumophirsmButton(
+            WhiteNeumorphismButton(
               content: "Statistiques",
+              disabled: true,
               colorDifference: 0.10,
+              fontSize: 16,
             )
           ],
         ),
