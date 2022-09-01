@@ -41,7 +41,7 @@ class WhiteNeumorphismButton extends NeumophirsmButton {
 // ignore: must_be_immutable
 class NeumophirsmButton extends StatelessWidget {
   static const double difference = 0.15;
-  static const double borderRadius = 30;
+  static const double borderRadius = 20;
 
   final Function? onPressed;
   final String content;
@@ -105,7 +105,7 @@ class NeumophirsmButton extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: TextButton(
         style: bStyle,
         onPressed: disabled

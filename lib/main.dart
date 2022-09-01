@@ -52,7 +52,7 @@ class MusclataxMainMenu extends StatelessWidget {
             ),
             WhiteNeumorphismButton(
               onPressed: () async {
-                int currentDay = 7 /*uu.DateUtils.dayNumber()*/;
+                int currentDay = uu.DateUtils.dayNumber();
                 List<Exercice> exercices =
                     await Exercice().select().day.equals(currentDay).toList();
                 Navigator.push(

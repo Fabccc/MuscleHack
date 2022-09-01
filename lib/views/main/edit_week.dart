@@ -30,6 +30,8 @@ class EditWeek extends StatelessWidget {
                         },
                         content: uu.DateUtils.dayName(day),
                         colorDifference: 0.05,
+                        vertical: 0,
+                        horizontal: 0,
                       ))
                   .toList(),
               mainAxisSpacing: 5,

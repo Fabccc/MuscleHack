@@ -17,20 +17,23 @@ class ExerciceListWidget extends StatelessWidget {
 
     String formatRepos = uu.DateUtils.formatSecond(repos);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          name,
-          textAlign: TextAlign.left,
-          style: const TextStyle(fontSize: 20),
-        ),
-        Text(
-          "$series série de $reps reps avec $formatRepos de repos",
-          textAlign: TextAlign.left,
-          style: const TextStyle(fontStyle: FontStyle.italic),
-        )
-      ],
+    return Flexible(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            name,
+            textAlign: TextAlign.left,
+            style: const TextStyle(fontSize: 20),
+            overflow: TextOverflow.fade,
+          ),
+          Text(
+            "$series série de $reps reps avec $formatRepos de repos",
+            textAlign: TextAlign.left,
+            style: const TextStyle(fontStyle: FontStyle.italic),
+          )
+        ],
+      ),
     );
   }
 }
