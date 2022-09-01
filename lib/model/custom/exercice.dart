@@ -23,6 +23,7 @@ class ExerciceListWidget extends StatelessWidget {
         Text(
           name,
           textAlign: TextAlign.left,
+          style: const TextStyle(fontSize: 20),
         ),
         Text(
           "$series série de $reps reps avec $formatRepos de repos",

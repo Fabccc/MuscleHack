@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:musclatax/components/container.dart';
 import 'package:musclatax/components/title.dart';
 import 'package:musclatax/components/utils.dart' as uu;

@@ -12,6 +12,7 @@ import 'package:musclatax/components/button.dart';
 import 'package:musclatax/components/container.dart';
 import 'package:musclatax/model/model.dart';
 import 'package:musclatax/tools/helper.dart';
+import 'package:musclatax/views/seance/weight_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:musclatax/components/utils.dart' as uu;
 
@@ -25,7 +26,7 @@ class SeanceIsolate {
 
         // auto start service
         autoStart: true,
-        isForegroundMode: true,
+        isForegroundMode: false,
       ),
       iosConfiguration: IosConfiguration(
         // auto start service
@@ -43,7 +44,6 @@ class SeanceIsolate {
 
   static bool onIosBackground(ServiceInstance service) {
     WidgetsFlutterBinding.ensureInitialized();
-    debugPrint('FLUTTER BACKGROUND FETCH');
 
     return true;
   }
@@ -58,6 +58,7 @@ class SeanceIsolate {
     int currentRestTime = 0;
     int kgUsed = 0;
     bool started = false;
+    bool done = false;
 
     if (service is AndroidServiceInstance) {
       service.setForegroundNotificationInfo(
@@ -77,43 +78,58 @@ class SeanceIsolate {
             .toList();
         exerciceIndex = 0;
         currentRestTime = 0;
-        kgUsed = 0;
         started = true;
       }
+    });
+
+    service.on("setWeight").listen((event) {
+      debugPrint(event.toString());
+      int weight = event!["weight"];
+      kgUsed = weight;
     });
 
     service.on("startRepos").listen((event) {
       Exercice current = exercices[exerciceIndex];
       // Check si on doit augmenter le nombre de série
       seriesIndex++;
-      if (seriesIndex <= (current.series ?? 4)) {
+      if (seriesIndex >= (current.series ?? 4)) {
         // Index de série allat de 0 à series-1, si on est égal ça veut dire qu'on a fini l'exercice
         exerciceIndex++;
+        seriesIndex = 0;
+        currentRestTime = 0;
+      } else {
+        currentRestTime = 0;
       }
+      done = false;
     });
 
     // bring to foreground
     Timer.periodic(const Duration(seconds: 1), (timer) async {
       /// you can see this log in logcat
       if (!started) {
-        service.invoke(
-          'update',
-          {
-            "started": false,
-          },
-        );
       } else {
         Exercice current = exercices[exerciceIndex];
         if (currentRestTime < (current.rest ?? 0)) {
           currentRestTime++;
-          service
-              .invoke("update", {"exercice": current, "rest": currentRestTime});
+          service.invoke("update", {
+            "exercice": current,
+            "rest": currentRestTime,
+            "serie": seriesIndex
+          });
           if (service is AndroidServiceInstance) {
             service.setForegroundNotificationInfo(
                 title: "Musclatax",
                 content: uu.DateUtils.formatSecond(currentRestTime));
           }
           return;
+        } else if (!done) {
+          // Performed.withFields(exercices[exerciceIndex].id, seriesIndex, kgUsed,
+          //         DateTime.now())
+          //     .save();
+          debugPrint(
+              "Exercice sauvegardé '${exercices[exerciceIndex].name}', series N°$seriesIndex"
+              " <> kg $kgUsed, dateTime ${DateTime.now()}");
+          done = true;
         }
       }
     });
@@ -136,86 +152,134 @@ class SeanceRunning extends StatefulWidget {
 
 class _State extends State<SeanceRunning> {
   List<Exercice> exercices;
+  int selectedWeight = 0;
 
   _State({required this.exercices});
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     int size = 40;
     return Scaffold(
       body: DefaultContainer(
+          topbottom: 40,
           child: Column(
-        children: [
-          StreamBuilder<Map<String, dynamic>?>(
-              stream: FlutterBackgroundService().on("update"),
-              builder: ((context, snapshot) {
-                dynamic strData = snapshot.data ?? "";
-                debugPrint(strData.toString());
-                if (!snapshot.hasData ||
-                    (snapshot.data != null &&
-                        (snapshot.data!.containsKey("started")))) {
-                  return WhiteNeumorphismButton(
-                    content: "Appuyer pour commencer",
-                    fontSize: 12,
-                    color: UITools.mainTextColor,
-                    backgroundColor: UITools.mainBgColor,
-                    minWidth: 80,
-                    horizontal: size,
-                    vertical: size + 60,
-                    onPressed: () {
-                      final service = FlutterBackgroundService();
-                      service.invoke("startSeance", {"exercices": exercices});
-                    },
-                  );
-                }
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              StreamBuilder<Map<String, dynamic>?>(
+                  stream: FlutterBackgroundService().on("update"),
+                  initialData: {
+                    "exercice": exercices.first,
+                    "rest": -1,
+                    "serie": 0
+                  },
+                  builder: ((context, snapshot) {
+                    dynamic strData = snapshot.data ?? "";
+                    if (!snapshot.hasData ||
+                        (snapshot.data != null &&
+                            (snapshot.data!.containsKey("started")))) {
+                      return WhiteNeumorphismButton(
+                        content: "Appuyer pour commencer",
+                        fontSize: 12,
+                        color: UITools.mainTextColor,
+                        backgroundColor: UITools.mainBgColor,
+                        minWidth: 80,
+                        horizontal: size,
+                        vertical: size + 60,
+                        onPressed: () {
+                          final service = FlutterBackgroundService();
+                          service
+                              .invoke("startSeance", {"exercices": exercices});
+                        },
+                      );
+                    }
 
-                final data = snapshot.data!;
-                Exercice currentExercice =
-                    Exercice.fromMap(json.decode(data["exercice"]));
-                int currentRestTime = data["rest"];
-                bool ended = currentExercice.rest == currentRestTime;
+                    final data = snapshot.data!;
+                    Exercice currentExercice = data["exercice"] is Exercice
+                        ? data["exercice"]
+                        : Exercice.fromMap(jsonDecode(data["exercice"]));
+                    int currentRestTime = data["rest"];
+                    int currentSerie = data["serie"];
+                    bool ended = currentExercice.rest == currentRestTime;
+                    bool setupState = currentRestTime == -1;
+                    if (setupState) {
+                      ended = true;
+                    }
 
-                String from = uu.DateUtils.formatSecond(currentRestTime);
-                String end =
-                    uu.DateUtils.formatSecond(currentExercice.rest ?? 60);
+                    String from = uu.DateUtils.formatSecond(currentRestTime);
+                    String end =
+                        uu.DateUtils.formatSecond(currentExercice.rest ?? 60);
 
-                return Column(
-                  children: [
-                    WhiteNeumorphismButton(
-                      content: "",
-                      fontSize: 12,
-                      color: UITools.mainTextColor,
-                      backgroundColor: ended
-                          ? UITools.mainBgSuccessColor
-                          : UITools.mainBgErrorColor,
-                      minWidth: 80,
-                      horizontal: size + 80,
-                      vertical: size + 80,
-                      onPressed: () {
-                        final service = FlutterBackgroundService();
-                        service.invoke("startRepos");
-                      },
-                    ),
-                    Text("$from / $end"),
-                    LinearProgressIndicator(
-                      value: uu.MathUtils.map(currentRestTime.toDouble(), 0,
-                          (currentExercice.rest ?? 60).toDouble(), 0, 1),
-                      semanticsLabel: 'Linear progress indicator',
-                    )
-                  ],
-                );
-              })),
-          Container(
-            margin: const EdgeInsets.only(top: 25, bottom: 25),
-            child: Row(
-              children: [Text("Exercice "), Text("Repos"), Text("Série")],
-            ),
-          ),
-          Row(
-            children: [Text("Choix poids")],
-          )
-        ],
-      )),
+                    return Column(
+                      children: [
+                        WhiteNeumorphismButton(
+                          content: "",
+                          fontSize: 12,
+                          color: UITools.mainTextColor,
+                          backgroundColor: ended
+                              ? UITools.mainBgSuccessColor
+                              : UITools.mainBgErrorColor,
+                          minWidth: 80,
+                          horizontal: size + 80,
+                          vertical: size + 80,
+                          onPressed: () {
+                            final service = FlutterBackgroundService();
+                            if (setupState) {
+                              service.invoke(
+                                  "startSeance", {"exercices": exercices});
+                            } else {
+                              service.invoke("startRepos");
+                            }
+                          },
+                        ),
+                        ended ? const SizedBox.shrink() : Text("$from / $end"),
+                        ended
+                            ? const SizedBox.shrink()
+                            : LinearProgressIndicator(
+                                value: uu.MathUtils.map(
+                                    currentRestTime.toDouble(),
+                                    0,
+                                    (currentExercice.rest ?? 60).toDouble(),
+                                    0,
+                                    1),
+                                semanticsLabel: 'Linear progress indicator',
+                              ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 25, bottom: 25),
+                          child: Column(
+                            children: [
+                              Text(
+                                "${currentExercice.name}",
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              Text("Série n°${currentSerie + 1}",
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontStyle: FontStyle.italic))
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  })),
+              WeightList(
+                selectedWeight: selectedWeight,
+                onUpdate: (int index) {
+                  setState(() {
+                    selectedWeight = index;
+                  });
+                  final service = FlutterBackgroundService();
+                  service.invoke(
+                      "setWeight", {"weight": (selectedWeight + 1) * 5});
+                },
+              )
+            ],
+          )),
     );
   }
 }
