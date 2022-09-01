@@ -56,14 +56,15 @@ class LaunchWeek extends StatelessWidget {
             // On démarre le service
             await SeanceIsolate.initializeService();
             // On lance la vue
-            await Navigator.push(
+            Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => SeanceRunning(
                           exercices: exercices,
-                        )));
+                        ))).then((value) async {
+              await SeanceIsolate.stop();
+            });
             // Quand on revient derrière on stop le service
-            await SeanceIsolate.stop();
           },
           label: const Text("LANCER"),
           backgroundColor: UITools.mainBgColor,

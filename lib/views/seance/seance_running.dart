@@ -94,6 +94,13 @@ class SeanceIsolate {
       if (seriesIndex >= (current.series ?? 4)) {
         // Index de série allat de 0 à series-1, si on est égal ça veut dire qu'on a fini l'exercice
         exerciceIndex++;
+        if (exerciceIndex >= exercices.length) {
+          // On a dépassé le nombre d'exo, donc en gros on a fini la séance, doit dépop
+          service.invoke("update", {
+            "close": true,
+          });
+          return;
+        }
         seriesIndex = 0;
         currentRestTime = 0;
       } else {
@@ -196,6 +203,12 @@ class _State extends State<SeanceRunning> {
                               .invoke("startSeance", {"exercices": exercices});
                         },
                       );
+                    }
+                    if (!snapshot.hasData ||
+                        (snapshot.data != null &&
+                            (snapshot.data!.containsKey("close")))) {
+                      Navigator.pop(context);
+                      return Text("pop");
                     }
 
                     final data = snapshot.data!;
