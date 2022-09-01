@@ -51,10 +51,9 @@ const seqIdentity = SqfEntitySequence(
 
 @SqfEntityBuilder(myDbModel)
 const myDbModel = SqfEntityModel(
-    modelName: 'MyDbModel', // optional
-    databaseName: 'sampleORM.db',
+    databaseName: 'musclatax.db',
     password:
-        null, // You can set a password if you want to use crypted database
+        "issou", // You can set a password if you want to use crypted database
     // put defined tables into the tables list.
     databaseTables: [tableExercices, tablePerformed],
     formTables: [tableExercices],

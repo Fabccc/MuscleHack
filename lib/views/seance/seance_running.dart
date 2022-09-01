@@ -13,7 +13,6 @@ import 'package:musclatax/components/container.dart';
 import 'package:musclatax/model/model.dart';
 import 'package:musclatax/tools/helper.dart';
 import 'package:musclatax/views/seance/weight_list.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:musclatax/components/utils.dart' as uu;
 
 class SeanceIsolate {
