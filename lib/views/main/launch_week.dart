@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:musclatax/components/container.dart';
 import 'package:musclatax/components/title.dart';
 import 'package:musclatax/components/utils.dart' as uu;
@@ -56,14 +55,13 @@ class LaunchWeek extends StatelessWidget {
             // On démarre le service
             await SeanceIsolate.initializeService();
             // On lance la vue
-            Navigator.push(
+            await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => SeanceRunning(
                           exercices: exercices,
-                        ))).then((value) async {
-              await SeanceIsolate.stop();
-            });
+                        )));
+            await SeanceIsolate.stop();
             // Quand on revient derrière on stop le service
           },
           label: const Text("LANCER"),

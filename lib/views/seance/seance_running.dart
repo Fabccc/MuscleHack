@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:musclatax/components/button.dart';
@@ -51,14 +48,6 @@ class SeanceIsolate {
     // Only available for flutter 3.0.0 and later
     DartPluginRegistrant.ensureInitialized();
 
-    List<Exercice> exercices = [];
-    int exerciceIndex = 0;
-    int seriesIndex = 0;
-    int currentRestTime = 0;
-    int kgUsed = 0;
-    bool started = false;
-    bool done = false;
-
     if (service is AndroidServiceInstance) {
       service.setForegroundNotificationInfo(
           title: "Musclatax", content: "En attente");
@@ -67,8 +56,19 @@ class SeanceIsolate {
     service.on('stopService').listen((event) {
       service.stopSelf();
     });
+    List<Exercice> exercices = [];
+    int exerciceIndex = 0;
+    int seriesIndex = 0;
+    int currentRestTime = 0;
+    int kgUsed = 0;
+    bool started = false;
+    bool done = false;
+    debugPrint("D => register startSeance");
 
     service.on("startSeance").listen((event) async {
+      debugPrint("A => $event");
+      debugPrint("B => $started");
+      debugPrint("C => $exercices");
       if (event != null && !started) {
         List<dynamic> exec = event["exercices"];
         exercices = exec
