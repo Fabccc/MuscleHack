@@ -43,6 +43,7 @@ dependencies:
   flutter_background_service:
   flutter_background_service_android:
   device_info_plus:
+  sqlite3_flutter_libs:
 
 dev_dependencies:
   build_runner:
