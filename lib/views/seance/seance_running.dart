@@ -3,14 +3,18 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:musclatax/components/button.dart';
 import 'package:musclatax/components/container.dart';
 import 'package:musclatax/model/model.dart';
 import 'package:musclatax/tools/helper.dart';
 import 'package:musclatax/views/seance/weight_list.dart';
 import 'package:musclatax/components/utils.dart' as uu;
+
+/* Flutter background service */
+
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class SeanceIsolate {
   static Future<void> initializeService() async {
@@ -38,12 +42,14 @@ class SeanceIsolate {
     service.startService();
   }
 
+  @pragma('vm:entry-point')
   static bool onIosBackground(ServiceInstance service) {
     WidgetsFlutterBinding.ensureInitialized();
 
     return true;
   }
 
+  @pragma('vm:entry-point')
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
     DartPluginRegistrant.ensureInitialized();
@@ -60,7 +66,7 @@ class SeanceIsolate {
     int exerciceIndex = 0;
     int seriesIndex = 0;
     int currentRestTime = 0;
-    int kgUsed = 0;
+    int kgUsed = 5;
     bool started = false;
     bool done = false;
     debugPrint("D => register startSeance");
@@ -106,6 +112,7 @@ class SeanceIsolate {
       } else {
         currentRestTime = 0;
       }
+      // TODO check si on est au dernier exo pour update l'UI en conséquence
       done = false;
     });
 
@@ -114,13 +121,16 @@ class SeanceIsolate {
       /// you can see this log in logcat
       if (!started) {
       } else {
+        if (exerciceIndex >= exercices.length) return;
         Exercice current = exercices[exerciceIndex];
         if (currentRestTime < (current.rest ?? 0)) {
           currentRestTime++;
           service.invoke("update", {
             "exercice": current,
             "rest": currentRestTime,
-            "serie": seriesIndex
+            "serie": seriesIndex,
+            "exerciceIndex": exerciceIndex,
+            "exerciceLength": exercices.length,
           });
           if (service is AndroidServiceInstance) {
             service.setForegroundNotificationInfo(
@@ -159,6 +169,7 @@ class SeanceRunning extends StatefulWidget {
 class _State extends State<SeanceRunning> {
   List<Exercice> exercices;
   int selectedWeight = 0;
+  bool showWeight = true;
 
   _State({required this.exercices});
 
@@ -207,8 +218,14 @@ class _State extends State<SeanceRunning> {
                     if (!snapshot.hasData ||
                         (snapshot.data != null &&
                             (snapshot.data!.containsKey("close")))) {
-                      Navigator.pop(context);
-                      return Text("pop");
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        if (mounted) {
+                          setState(() {
+                            Navigator.pop(context);
+                          });
+                        }
+                      });
+                      return Container();
                     }
 
                     final data = snapshot.data!;
@@ -222,23 +239,46 @@ class _State extends State<SeanceRunning> {
                     if (setupState) {
                       ended = true;
                     }
+                    int exIndex = data["exerciceIndex"] ?? 0;
+                    int maxSeries = currentExercice.series ?? 0;
+                    bool lastExerciceLastSerie =
+                        exIndex == exercices.length - 1 &&
+                            currentSerie == maxSeries - 1;
 
                     String from = uu.DateUtils.formatSecond(currentRestTime);
                     String end =
                         uu.DateUtils.formatSecond(currentExercice.rest ?? 60);
 
+                    Color backgroundColor = ended
+                        ? UITools.mainBgSuccessColor
+                        : UITools.mainBgErrorColor;
+                    int widthHeight = size + 80;
+                    double fontSize = 12;
+                    String text = "";
+
+                    if (lastExerciceLastSerie && ended) {
+                      backgroundColor = UITools.mainBgColorLighter;
+                      widthHeight = size;
+                      text = "Finir la séance";
+                      fontSize = 18;
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        if (mounted) {
+                          setState(() {
+                            showWeight = false;
+                          });
+                        }
+                      });
+                    }
                     return Column(
                       children: [
                         WhiteNeumorphismButton(
-                          content: "",
-                          fontSize: 12,
+                          content: text,
+                          fontSize: fontSize,
                           color: UITools.mainTextColor,
-                          backgroundColor: ended
-                              ? UITools.mainBgSuccessColor
-                              : UITools.mainBgErrorColor,
+                          backgroundColor: backgroundColor,
                           minWidth: 80,
-                          horizontal: size + 80,
-                          vertical: size + 80,
+                          horizontal: widthHeight,
+                          vertical: widthHeight,
                           onPressed: () {
                             final service = FlutterBackgroundService();
                             if (setupState) {
@@ -269,7 +309,8 @@ class _State extends State<SeanceRunning> {
                                 "${currentExercice.name}",
                                 style: const TextStyle(fontSize: 20),
                               ),
-                              Text("Série n°${currentSerie + 1}",
+                              Text(
+                                  "Série n°${currentSerie + 1}/${currentExercice.series}",
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontStyle: FontStyle.italic))
@@ -279,17 +320,19 @@ class _State extends State<SeanceRunning> {
                       ],
                     );
                   })),
-              WeightList(
-                selectedWeight: selectedWeight,
-                onUpdate: (int index) {
-                  setState(() {
-                    selectedWeight = index;
-                  });
-                  final service = FlutterBackgroundService();
-                  service.invoke(
-                      "setWeight", {"weight": (selectedWeight + 1) * 5});
-                },
-              )
+              showWeight
+                  ? WeightList(
+                      selectedWeight: selectedWeight,
+                      onUpdate: (int index) {
+                        setState(() {
+                          selectedWeight = index;
+                        });
+                        final service = FlutterBackgroundService();
+                        service.invoke(
+                            "setWeight", {"weight": (selectedWeight + 1) * 5});
+                      },
+                    )
+                  : Container()
             ],
           )),
     );
