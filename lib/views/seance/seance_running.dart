@@ -95,6 +95,7 @@ class SeanceIsolate {
 
     service.on("startRepos").listen((event) {
       Exercice current = exercices[exerciceIndex];
+
       // Check si on doit augmenter le nombre de série
       seriesIndex++;
       if (seriesIndex >= (current.series ?? 4)) {
@@ -137,11 +138,11 @@ class SeanceIsolate {
                 title: "Musclatax",
                 content: uu.DateUtils.formatSecond(currentRestTime));
           }
-          return;
-        } else if (!done) {
-          // Performed.withFields(exercices[exerciceIndex].id, seriesIndex, kgUsed,
-          //         DateTime.now())
-          //     .save();
+        }
+        if (!done && currentRestTime == (current.rest ?? 0) - 1) {
+          Performed.withFields(exercices[exerciceIndex].id, seriesIndex, kgUsed,
+                  DateTime.now())
+              .save();
           debugPrint(
               "Exercice sauvegardé '${exercices[exerciceIndex].name}', series N°$seriesIndex"
               " <> kg $kgUsed, dateTime ${DateTime.now()}");
