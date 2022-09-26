@@ -4,18 +4,23 @@ class HeaderText extends StatelessWidget {
   final String text;
   double fontSize;
   double paddingBottom;
+  double paddingTop;
+  double paddingLeft;
 
   HeaderText(
       {Key? key,
       required this.text,
       this.fontSize = 36,
-      this.paddingBottom = 25})
+      this.paddingBottom = 25,
+      this.paddingTop = 0,
+      this.paddingLeft = 0})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: paddingBottom),
+      margin: EdgeInsets.only(
+          bottom: paddingBottom, left: paddingLeft, top: paddingTop),
       child: Text(text,
           style: TextStyle(
               fontFamily: "Ubuntu",

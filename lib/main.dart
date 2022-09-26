@@ -8,6 +8,7 @@ import 'package:musclatax/views/main/edit_week.dart';
 import 'package:musclatax/views/main/launch_week.dart';
 import 'package:musclatax/components/utils.dart' as uu;
 import 'package:musclatax/views/seance/seance_running.dart';
+import 'package:musclatax/views/statistics/select_exercice.dart';
 
 Future<void> main() async {
   initializeDateFormatting("fr_FR", null);
@@ -69,9 +70,14 @@ class MusclataxMainMenu extends StatelessWidget {
             ),
             WhiteNeumorphismButton(
               content: "Statistiques",
-              disabled: true,
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SelectExercice()))
+              },
               colorDifference: 0.10,
-              fontSize: 16,
+              fontSize: 15,
             )
           ],
         ),
