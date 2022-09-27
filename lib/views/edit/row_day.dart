@@ -47,13 +47,20 @@ class RowDay extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () {
-                    Exercice()
+                    Performed()
                         .select()
-                        .id
+                        .exercice
                         .equals(exercice.id)
                         .delete()
                         .then((value) {
-                      update();
+                      Exercice()
+                          .select()
+                          .id
+                          .equals(exercice.id)
+                          .delete()
+                          .then((value) {
+                        update();
+                      });
                     });
                   },
                   icon: const Icon(
