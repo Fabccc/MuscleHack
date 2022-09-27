@@ -262,10 +262,18 @@ class _State extends State<SeanceRunning> {
                       widthHeight = size;
                       text = "Finir la séance";
                       fontSize = 18;
-                      Future.delayed(const Duration(milliseconds: 500), () {
+                      Future.delayed(const Duration(milliseconds: 750), () {
                         if (mounted) {
                           setState(() {
                             showWeight = false;
+                          });
+                        }
+                      });
+                    } else if (ended && !showWeight) {
+                      Future.delayed(const Duration(milliseconds: 50), () {
+                        if (mounted) {
+                          setState(() {
+                            showWeight = true;
                           });
                         }
                       });
@@ -288,6 +296,14 @@ class _State extends State<SeanceRunning> {
                             } else {
                               service.invoke("startRepos");
                             }
+                            Future.delayed(const Duration(milliseconds: 50),
+                                () {
+                              if (mounted) {
+                                setState(() {
+                                  showWeight = false;
+                                });
+                              }
+                            });
                           },
                         ),
                         ended ? const SizedBox.shrink() : Text("$from / $end"),
@@ -307,11 +323,11 @@ class _State extends State<SeanceRunning> {
                           child: Column(
                             children: [
                               Text(
-                                "${currentExercice.name}",
+                                "${currentExercice.name} (${currentExercice.reps} reps)",
                                 style: const TextStyle(fontSize: 20),
                               ),
                               Text(
-                                  "Série n°${currentSerie + 1}/${currentExercice.series}",
+                                  "Série n°${currentSerie + 1}/${currentExercice.series} ",
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontStyle: FontStyle.italic))
