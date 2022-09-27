@@ -5,6 +5,7 @@ import 'package:musclatax/components/title.dart';
 import 'package:musclatax/model/model.dart';
 import 'package:musclatax/components/utils.dart' as uu;
 import 'package:musclatax/tools/helper.dart';
+import 'package:musclatax/views/statistics/exercice_stats.dart';
 
 class SelectExercice extends StatefulWidget {
   const SelectExercice({super.key});
@@ -60,7 +61,14 @@ class _SelectExercice extends State<SelectExercice> {
                   shrinkWrap: true,
                   itemBuilder: ((context, index) {
                     var exercice = value[index];
-                    return Container(
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ExerciceStat(exercice: exercice)));
+                      },
                       child: Center(
                         child: Text(
                           exercice.name ?? "",

@@ -1204,6 +1204,11 @@ class Performed extends TableBase {
     return __mnPerformed = __mnPerformed ?? PerformedManager();
   }
 
+  @override
+  String toString() {
+    return "id =$id,exercice =$exercice,seriesIndex =$seriesIndex,weight =$weight,date =$date";
+  }
+
   // METHODS
   @override
   Map<String, dynamic> toMap(
