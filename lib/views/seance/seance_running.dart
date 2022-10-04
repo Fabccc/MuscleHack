@@ -184,7 +184,7 @@ class _State extends State<SeanceRunning> {
     int size = 40;
     return Scaffold(
       body: DefaultContainer(
-          topbottom: 40,
+          topbottom: 0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -256,6 +256,14 @@ class _State extends State<SeanceRunning> {
                     int widthHeight = size + 80;
                     double fontSize = 12;
                     String text = "";
+                    String nextExerciceText = "";
+                    bool hasNextExercice = exIndex < exercices.length - 1;
+
+                    if (hasNextExercice) {
+                      Exercice nextExercice = exercices[exIndex + 1];
+                      nextExerciceText =
+                          "Prochain Exercice: ${nextExercice.name} (${nextExercice.series} x ${nextExercice.reps} reps)";
+                    }
 
                     if (lastExerciceLastSerie && ended) {
                       backgroundColor = UITools.mainBgColorLighter;
@@ -274,6 +282,14 @@ class _State extends State<SeanceRunning> {
                         if (mounted) {
                           setState(() {
                             showWeight = true;
+                          });
+                        }
+                      });
+                    } else if (!ended && currentRestTime > 0 && showWeight) {
+                      Future.delayed(const Duration(milliseconds: 50), () {
+                        if (mounted) {
+                          setState(() {
+                            showWeight = false;
                           });
                         }
                       });
@@ -296,14 +312,6 @@ class _State extends State<SeanceRunning> {
                             } else {
                               service.invoke("startRepos");
                             }
-                            Future.delayed(const Duration(milliseconds: 50),
-                                () {
-                              if (mounted) {
-                                setState(() {
-                                  showWeight = false;
-                                });
-                              }
-                            });
                           },
                         ),
                         ended ? const SizedBox.shrink() : Text("$from / $end"),
@@ -319,7 +327,7 @@ class _State extends State<SeanceRunning> {
                                 semanticsLabel: 'Linear progress indicator',
                               ),
                         Container(
-                          margin: const EdgeInsets.only(top: 25, bottom: 25),
+                          margin: const EdgeInsets.only(top: 5, bottom: 5),
                           child: Column(
                             children: [
                               Text(
@@ -330,7 +338,22 @@ class _State extends State<SeanceRunning> {
                                   "Série n°${currentSerie + 1}/${currentExercice.series} ",
                                   style: const TextStyle(
                                       fontSize: 16,
-                                      fontStyle: FontStyle.italic))
+                                      fontStyle: FontStyle.italic)),
+                              hasNextExercice
+                                  ? Wrap(
+                                      direction: Axis.vertical,
+                                      children: [
+                                        Text(
+                                          nextExerciceText,
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontStyle: FontStyle.italic,
+                                              color: UITools
+                                                  .mainTextColorAlternative),
+                                        )
+                                      ],
+                                    )
+                                  : Container()
                             ],
                           ),
                         ),
