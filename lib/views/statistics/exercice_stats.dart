@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -5,7 +7,7 @@ import 'package:musclatax/components/container.dart';
 import 'package:musclatax/model/model.dart';
 import 'package:musclatax/tools/helper.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'dart:math';
+import 'package:flutter/services.dart';
 
 class ExerciceStat extends StatefulWidget {
   final Exercice exercice;
@@ -32,6 +34,10 @@ class _ExerciceStateState extends State<ExerciceStat> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
     _updateData();
   }
 
@@ -50,6 +56,17 @@ class _ExerciceStateState extends State<ExerciceStat> {
         .orderBy(["date"])
         .top((exercice.series ?? 4) * 10)
         .toList();
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 
   @override
@@ -91,8 +108,8 @@ class _ExerciceStateState extends State<ExerciceStat> {
                   constraints: const BoxConstraints(
                     minHeight: 5.0,
                     minWidth: 5.0,
-                    maxHeight: 500,
-                    maxWidth: 400,
+                    maxHeight: 350,
+                    maxWidth: 900,
                   ),
                   child: SfCartesianChart(
                       primaryYAxis: NumericAxis(

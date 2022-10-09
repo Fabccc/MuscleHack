@@ -44,7 +44,8 @@ class _SelectExercice extends State<SelectExercice> {
             key,
             ExpansionPanel(
                 canTapOnHeader: true,
-                isExpanded: _isOpen == key,
+                isExpanded:
+                    _exercices.length == 1 ? _isOpen == 1 : _isOpen == key,
                 headerBuilder: ((context, isExpanded) {
                   return HeaderText(
                     text: uu.DateUtils.dayName(key),
