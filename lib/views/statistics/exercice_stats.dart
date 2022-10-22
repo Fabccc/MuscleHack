@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,31 @@ class _ExerciceStateState extends State<ExerciceStat> {
     int maxWeight = _performed.map((e) => e.weight ?? 5).reduce(max) + 5;
     int minWeight = _performed.map((e) => e.weight ?? 5).reduce(min) - 5;
 
+    var prs = groupBy(_performed, (e) => e.seriesIndex ?? 0)
+        .entries
+        .map((e) => e.value.map((ex) => ex.weight ?? 0).reduce(max))
+        .mapIndexed((index, element) => Padding(
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              child: RichText(
+                  text: TextSpan(
+                      style: const TextStyle(
+                          color: UITools.mainTextColorAlternative),
+                      text: "PR Série n°${index + 1}: ",
+                      children: [
+                    TextSpan(
+                        text: "$element",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: UITools.mainBgColor)),
+                    const TextSpan(text: " kg")
+                  ]
+                      //   Text("PR Série n°${index + 1}: $element kg",style: const TextStyle(
+                      //   color: UITools.mainTextColorAlternative
+                      // ),)
+                      )),
+            ))
+        .toList();
+
     var formatted =
         groupBy(_performed, (e) => e.seriesIndex ?? 0).entries.map((e) {
       int serie = e.key;
@@ -93,23 +119,23 @@ class _ExerciceStateState extends State<ExerciceStat> {
               shape: DataMarkerType.circle,
               borderWidth: 3,
               borderColor: LINE_COLORS[serie]),
-          dataLabelSettings: DataLabelSettings(
+          dataLabelSettings: const DataLabelSettings(
               isVisible: true, labelPosition: ChartDataLabelPosition.outside));
     }).toList();
 
     return Scaffold(
         backgroundColor: const Color(0xffe0e0e0),
         body: DefaultContainer(
-            topbottom: 50,
-            leftright: 10,
+            topbottom: 20,
+            leftright: 15,
             child: Column(children: [
               Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(
                     minHeight: 5.0,
                     minWidth: 5.0,
-                    maxHeight: 350,
-                    maxWidth: 900,
+                    maxHeight: 300,
+                    maxWidth: 800,
                   ),
                   child: SfCartesianChart(
                       primaryYAxis: NumericAxis(
@@ -121,6 +147,11 @@ class _ExerciceStateState extends State<ExerciceStat> {
                       primaryXAxis:
                           DateTimeAxis(name: "Date séances", isVisible: true),
                       series: formatted),
+                ),
+              ),
+              Center(
+                child: Row(
+                  children: prs,
                 ),
               )
             ])));

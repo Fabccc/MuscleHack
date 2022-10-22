@@ -21,7 +21,7 @@ class UITools {
   static const mainItemBgColor = Color.fromARGB(242, 15, 88, 223);
   static const mainItemDeletedBgColor = Color.fromARGB(228, 173, 15, 15);
   static const mainTextColor = Colors.white;
-  static const mainTextColorAlternative = Color.fromARGB(255, 144, 163, 193);
+  static const mainTextColorAlternative = Color.fromARGB(255, 45, 68, 105);
   static const mainIconsColor = Colors.white;
   static const double mainFontSize = 24;
   static const double mainIconSize = 30;
