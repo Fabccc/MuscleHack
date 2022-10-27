@@ -4,6 +4,7 @@ import 'package:musclatax/components/button.dart';
 import 'package:musclatax/components/container.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:musclatax/model/model.dart';
+import 'package:musclatax/views/generic/select_day.dart';
 import 'package:musclatax/views/main/edit_week.dart';
 import 'package:musclatax/views/main/launch_week.dart';
 import 'package:musclatax/components/utils.dart' as uu;
@@ -53,16 +54,22 @@ class MusclataxMainMenu extends StatelessWidget {
             ),
             WhiteNeumorphismButton(
               onPressed: () async {
-                int currentDay = uu.DateUtils.dayNumber();
-                List<Exercice> exercices =
-                    await Exercice().select().day.equals(currentDay).toList();
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => LaunchWeek(
-                              currentDay: currentDay,
-                              exercices: exercices,
-                            )));
+                        builder: (context) =>
+                            SelectDay(callback: ((context, day) async {
+                              List<Exercice> exercices = await Exercice()
+                                  .select()
+                                  .day
+                                  .equals(day)
+                                  .toList();
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return LaunchWeek(
+                                    exercices: exercices, currentDay: day);
+                              }));
+                            }))));
               },
               content: "Lancer une séance",
               fontSize: 16,
