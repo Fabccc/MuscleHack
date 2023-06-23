@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import "package:musclatax/components/utils.dart" as uu;
 import 'package:musclatax/tools/helper.dart';
 
 typedef Update = void Function(int index);
 
+// ignore: must_be_immutable
 class WeightList extends StatelessWidget {
   int selectedWeight;
   Update onUpdate;
@@ -23,15 +22,15 @@ class WeightList extends StatelessWidget {
             crossAxisCount: 4,
             // Generate 100 widgets that display their index in the List.
             children: List.generate(40, (index) {
-              int kg = (index + 1) * 5;
-              double lbs = kg.toDouble() * 2.205;
+              double kg = (index + 1) * 2.5;
+              // double lbs = kg.toDouble() * 2.205;
 
               return GestureDetector(
                 onTap: () {
                   onUpdate(index);
                 },
                 child: Container(
-                  margin: const EdgeInsets.all(5.0),
+                  margin: const EdgeInsets.all(3.0),
                   decoration: BoxDecoration(
                       color: selectedWeight == index
                           ? UITools.mainBgColor
@@ -45,8 +44,8 @@ class WeightList extends StatelessWidget {
                         '$kg kg',
                         style: const TextStyle(color: Colors.white),
                       ),
-                      Text("(${lbs.floor()} lbs)",
-                          style: const TextStyle(color: Colors.white))
+                      // Text("(${lbs.floor()} lbs)",
+                      //     style: const TextStyle(color: Colors.white))
                     ],
                   ),
                 ),

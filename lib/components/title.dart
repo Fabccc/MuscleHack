@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+// ignore: must_be_immutable
 class HeaderText extends StatelessWidget {
   final String text;
   double fontSize;
@@ -30,6 +31,7 @@ class HeaderText extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class StandarText extends StatelessWidget {
   final String text;
   double fontSize;

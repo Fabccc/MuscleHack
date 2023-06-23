@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:musclatax/components/button.dart';
 import 'package:musclatax/components/container.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -7,8 +6,6 @@ import 'package:musclatax/model/model.dart';
 import 'package:musclatax/views/generic/select_day.dart';
 import 'package:musclatax/views/main/edit_week.dart';
 import 'package:musclatax/views/main/launch_week.dart';
-import 'package:musclatax/components/utils.dart' as uu;
-import 'package:musclatax/views/seance/seance_running.dart';
 import 'package:musclatax/views/statistics/select_exercice.dart';
 
 Future<void> main() async {

@@ -1,9 +1,7 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:musclatax/components/container.dart';
 import 'package:musclatax/model/model.dart';
 import 'package:musclatax/tools/helper.dart';
@@ -20,7 +18,7 @@ class ExerciceStat extends StatefulWidget {
 }
 
 class _ExerciceStateState extends State<ExerciceStat> {
-  static List<Color> LINE_COLORS = [
+  static List<Color> linerColors = [
     Colors.red.shade500,
     Colors.blue.shade500,
     Colors.green.shade700,
@@ -54,8 +52,8 @@ class _ExerciceStateState extends State<ExerciceStat> {
         .select()
         .exercice
         .equals(exercice.id)
-        .orderBy(["date"])
-        .top((exercice.series ?? 4) * 10)
+        .orderByDesc(["date"])
+        .top((exercice.series ?? 4) * 15)
         .toList();
   }
 
@@ -111,14 +109,14 @@ class _ExerciceStateState extends State<ExerciceStat> {
           name: "Serie n°${serie + 1}",
           xValueMapper: (p, _) => p.date,
           yValueMapper: (p, _) => p.weight,
-          color: LINE_COLORS[serie],
+          color: linerColors[serie],
           markerSettings: MarkerSettings(
               isVisible: true,
               height: 4,
               width: 4,
               shape: DataMarkerType.circle,
               borderWidth: 3,
-              borderColor: LINE_COLORS[serie]),
+              borderColor: linerColors[serie]),
           dataLabelSettings: const DataLabelSettings(
               isVisible: true, labelPosition: ChartDataLabelPosition.outside));
     }).toList();

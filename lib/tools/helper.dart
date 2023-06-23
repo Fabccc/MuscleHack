@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-//import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as fdp;
 import 'package:intl/intl.dart';
 import 'package:sqfentity_gen/sqfentity_gen.dart';
 
@@ -25,13 +24,12 @@ class UITools {
   static const mainIconsColor = Colors.white;
   static const double mainFontSize = 24;
   static const double mainIconSize = 30;
-  static final DateFormat dateFormatter =
-      DateFormat('yyyy-MM-dd', mainDatePickerLocaleType.toString());
-  static const mainDatePickerLocaleType = LocaleType.tr;
-  static const mainDatePickerTheme = DatePickerTheme(
-      backgroundColor: UITools.mainBgColorLighter,
-      itemStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      doneStyle: TextStyle(color: UITools.mainTextColor, fontSize: 16));
+  // static const mainDatePickerLocaleType = fdp.LocaleType.fr;
+  static final DateFormat dateFormatter = DateFormat('yyyy-MM-dd', "fr");
+  // static var mainDatePickerTheme = const fdp.DatePickerTheme(
+  //     backgroundColor: UITools.mainBgColorLighter,
+  //     itemStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+  //     doneStyle: TextStyle(color: UITools.mainTextColor, fontSize: 16));
 
   Widget getMainPage(Widget body, String title /*, void refreshList()*/) {
     return Scaffold(
@@ -280,23 +278,23 @@ class UITools {
     });
   }
 
-  static Future<DateTime?> showDateTimePicker(BuildContext context,
-          {DateTime? currentTime,
-          DateTime? minTime,
-          DateTime? maxTime,
-          DateChangedCallback? onChanged,
-          DateChangedCallback? onConfirm,
-          DateCancelledCallback? onCancel}) =>
-      DatePicker.showDatePicker(context,
-          showTitleActions: true,
-          minTime: minTime,
-          maxTime: maxTime,
-          onChanged: onChanged,
-          onConfirm: onConfirm,
-          onCancel: onCancel,
-          locale: UITools.mainDatePickerLocaleType,
-          currentTime: currentTime,
-          theme: UITools.mainDatePickerTheme);
+  // static Future<DateTime?> showDateTimePicker(BuildContext context,
+  //         {DateTime? currentTime,
+  //         DateTime? minTime,
+  //         DateTime? maxTime,
+  //         fdp.DateChangedCallback? onChanged,
+  //         fdp.DateChangedCallback? onConfirm,
+  //         fdp.DateCancelledCallback? onCancel}) =>
+  //     fdp.DatePicker.showDatePicker(context,
+  //         showTitleActions: true,
+  //         minTime: minTime,
+  //         maxTime: maxTime,
+  //         onChanged: onChanged,
+  //         onConfirm: onConfirm,
+  //         onCancel: onCancel,
+  //         locale: UITools.mainDatePickerLocaleType,
+  //         currentTime: currentTime,
+  //         theme: UITools.mainDatePickerTheme);
 
   double scaleWidth(double size) {
     final retVal = size * windowWidth / _mobileSizeWidth;
