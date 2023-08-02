@@ -43,7 +43,11 @@ class _ExerciceStateState extends State<ExerciceStat> {
   void _updateData() async {
     var sessions = await _fetchData();
     setState(() {
-      _performed = sessions;
+      _performed = sessions.map((e) {
+        // divide e.weight by 2.5
+        e.weight = (e.weight ?? 0).toDouble() ~/ 2;
+        return e;
+      }).toList();
     });
   }
 

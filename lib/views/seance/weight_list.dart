@@ -3,6 +3,15 @@ import 'package:musclatax/tools/helper.dart';
 
 typedef Update = void Function(int index);
 
+const Map<int, Color> weightColors = {
+  // Multiple of 10 = green
+  10: Color.fromARGB(255, 65, 145, 65),
+  // Multiple of 20 = blue
+  20: Color.fromARGB(255, 76, 162, 219),
+  // Multiple of 25 = red
+  25: Color.fromARGB(255, 219, 76, 76),
+};
+
 // ignore: must_be_immutable
 class WeightList extends StatelessWidget {
   int selectedWeight;
@@ -19,11 +28,18 @@ class WeightList extends StatelessWidget {
           child: GridView.count(
             // Create a grid with 2 columns. If you change the scrollDirection to
             // horizontal, this produces 2 rows.
-            crossAxisCount: 4,
+            crossAxisCount: 5,
             // Generate 100 widgets that display their index in the List.
-            children: List.generate(40, (index) {
+            children: List.generate(100, (index) {
               double kg = (index + 1) * 2.5;
               // double lbs = kg.toDouble() * 2.205;
+
+              Color colorForWeight = const Color.fromARGB(255, 56, 56, 56);
+              weightColors.forEach((key, value) {
+                if (kg % key == 0) {
+                  colorForWeight = value;
+                }
+              });
 
               return GestureDetector(
                 onTap: () {
@@ -33,8 +49,8 @@ class WeightList extends StatelessWidget {
                   margin: const EdgeInsets.all(3.0),
                   decoration: BoxDecoration(
                       color: selectedWeight == index
-                          ? UITools.mainBgColor
-                          : const Color.fromARGB(255, 56, 56, 56),
+                          ? UITools.mainItemBgColor
+                          : colorForWeight,
                       shape: BoxShape.circle),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
